@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+// https://www.rsdn.org/article/unix/sockets.xml
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -22,7 +23,6 @@ public:
             exit(1);
         }
 
-        struct sockaddr_in server_addr;
         server_addr.sin_family = AF_INET;
         server_addr.sin_port = htons(port_);
         server_addr.sin_addr.s_addr = inet_addr(address_);
@@ -39,13 +39,24 @@ public:
         std::cout << "Stop server." << std::endl;
     };
 
+    bool sendRequest(int sockID){
+        return (send(sockID, "1", 1, 0) == 1);
+    }
+
     int getID() const {
         return sock_id;
     };
+
+    struct sockaddr_in getSockaddr() const {
+        return server_addr;
+    };
+
 private:
     int sock_id;
     const int port_;
     const char* address_;
+    struct sockaddr_in server_addr;
+
 };
 
 class SocketClient{
@@ -59,12 +70,11 @@ public:
             exit(1);
         }
 
-        struct sockaddr_in addr;
-        addr.sin_family = AF_INET;
-        addr.sin_port = htons(port_);
-        addr.sin_addr.s_addr = inet_addr(address_);
+        client_addr.sin_family = AF_INET;
+        client_addr.sin_port = htons(port_);
+        client_addr.sin_addr.s_addr = inet_addr(address_);
 
-        if(connect(sock_id, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+        if(connect(sock_id, (struct sockaddr *)&client_addr, sizeof(client_addr)) < 0)
         {
             perror("connect");
             exit(2);
@@ -76,8 +86,27 @@ public:
 
     };
     
+    bool isRequested(){
+        if (recv(sock_id, &request, 1, 0)){
+            std::cout << "Request: " << request << std::endl;
+            return true;
+        }
+        return false;
+    }
+
+    int getID() const {
+        return sock_id;
+    };
+
+    struct sockaddr_in getSockaddr() const {
+        return client_addr;
+    };
+
+    char request = '0';
 private:
     int sock_id;
     const int port_;
     const char* address_;
+    struct sockaddr_in client_addr;
+
 };
