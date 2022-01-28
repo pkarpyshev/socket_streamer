@@ -5,6 +5,10 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/videoio.hpp>
 
+#include <ros/ros.h>
+#include <image_transport/image_transport.h>
+#include <cv_bridge/cv_bridge.h>
+
 const int buf_size = CAM_HEIGHT*CAM_WIDTH;
 
 int main(int argc, char *argv[]){
@@ -15,10 +19,16 @@ int main(int argc, char *argv[]){
         
     cv::Size frame_size(CAM_WIDTH, CAM_HEIGHT);
     cv::Mat frame_gray(frame_size, CV_8UC1);
-
     cv::namedWindow("Server", cv::WINDOW_AUTOSIZE);
-    // while(1) {
+    
+    ros::init(argc, argv, "video_streamer");
+    ros::NodeHandle nh;
+    image_transport::ImageTransport it(nh);
+    image_transport::Publisher pub = it.advertise("camera/image", 1);
 
+    sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", frame_gray).toImageMsg();
+    ros::Rate loop_rate(5);
+    // while(1) {
         int client_sock = accept(server.getID(), NULL, NULL);
         if(client_sock < 0) {
             perror("accept");
@@ -32,6 +42,10 @@ int main(int argc, char *argv[]){
             cv::imshow("Server", frame_gray);
             if (cv::waitKey(10) >= 0)
                 break;
+
+            pub.publish(msg);
+            ros::spinOnce();
+            loop_rate.sleep();
         }
         
         close(client_sock);
