@@ -1,0 +1,3 @@
+<launch>
+    <node pkg=socket_streamer type=server_node name=server_node />
+</launch>

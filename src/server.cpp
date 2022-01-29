@@ -19,15 +19,15 @@ int main(int argc, char *argv[]){
         
     cv::Size frame_size(CAM_WIDTH, CAM_HEIGHT);
     cv::Mat frame_gray(frame_size, CV_8UC1);
-    cv::namedWindow("Server", cv::WINDOW_AUTOSIZE);
+    // cv::namedWindow("Server", cv::WINDOW_AUTOSIZE);
     
-    ros::init(argc, argv, "video_streamer");
+    ros::init(argc, argv, "server_node");
     ros::NodeHandle nh;
     image_transport::ImageTransport it(nh);
     image_transport::Publisher pub = it.advertise("camera/image", 1);
 
     sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", frame_gray).toImageMsg();
-    ros::Rate loop_rate(5);
+    ros::Rate loop_rate(1);
     // while(1) {
         int client_sock = accept(server.getID(), NULL, NULL);
         if(client_sock < 0) {
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
 
             pub.publish(msg);
             ros::spinOnce();
-            loop_rate.sleep();
+            // loop_rate.sleep();
         }
         
         close(client_sock);
