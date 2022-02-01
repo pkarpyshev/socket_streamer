@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
-#define TARGET_ADDR "192.168.1.6"
+#define TARGET_ADDR "10.30.33.39"
 #define TARGET_PORT 40000
 
 class SocketServer{

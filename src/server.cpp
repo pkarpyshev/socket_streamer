@@ -26,8 +26,8 @@ int main(int argc, char *argv[]){
     image_transport::ImageTransport it(nh);
     image_transport::Publisher pub = it.advertise("camera/image", 1);
 
-    sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", frame_gray).toImageMsg();
-    ros::Rate loop_rate(1);
+    sensor_msgs::ImagePtr msg;// = cv_bridge::CvImage(std_msgs::Header(), "mono8", frame_gray).toImageMsg();
+    // ros::Rate loop_rate(20);
     // while(1) {
         int client_sock = accept(server.getID(), NULL, NULL);
         if(client_sock < 0) {
@@ -35,14 +35,14 @@ int main(int argc, char *argv[]){
             exit(3);
         }
 
-        for (;;){
+        while (nh.ok()){
             auto addr_from = server.getSockaddr();
             int bytes_read = recv(client_sock, frame_gray.data, buf_size, MSG_WAITALL);
 
-            cv::imshow("Server", frame_gray);
-            if (cv::waitKey(10) >= 0)
-                break;
-
+            // cv::imshow("Server", frame_gray);
+            // if (cv::waitKey(10) >= 0)
+            //     break;
+            msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", frame_gray).toImageMsg();
             pub.publish(msg);
             ros::spinOnce();
             // loop_rate.sleep();
