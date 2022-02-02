@@ -23,4 +23,7 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 include_directories(include)
 add_executable(server_node src/server.cpp)
+add_executable(restamper_node src/restamper.cpp)
+
 target_link_libraries(server_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} )
+target_link_libraries(restamper_node ${catkin_LIBRARIES} )
