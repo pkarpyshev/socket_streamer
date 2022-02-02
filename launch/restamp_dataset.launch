@@ -1,0 +1,17 @@
+<launch>
+    <node pkg="socket_streamer" type="restamper_node" name="restamper_node" output="screen" />
+
+    <arg name="in_path" default="/home/ildar/catkin_ws/src/socket_streamer/launch/seq1" />
+    <node pkg="rosbag" type="play" name="player" output="screen" 
+        args="$(arg in_path).bag
+        --topics /camera/image /cf1/imu
+        --clock" 
+    />
+
+    <arg name="out_path" default="/home/ildar/catkin_ws/src/socket_streamer/launch/seq1_restamp" />
+    <node pkg="rosbag" type="record" name="recorder" output="screen" 
+        args=" /image_raw /imu
+        -O $(arg out_path) --duration=60" 
+    />
+    
+</launch>

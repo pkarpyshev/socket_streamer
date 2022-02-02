@@ -1,13 +1,13 @@
 <launch>
-    <arg name="path" default="" />
-    <arg name="file_1" default="/home/ildar/catkin_ws/src/socket_streamer/launch/seq1" />
-    <remap from="/camera/image" to="/cam0/image_raw" />
-    <remap from="/cf1/imu" to="/imu0" />
+    <arg name="in_path" default="/home/ildar/catkin_ws/src/socket_streamer/launch/seq1_restamp" />
+    <remap from="/image_raw" to="/cam0/image_raw" />
+    <remap from="/imu" to="/imu0" />
     
     <!-- <remap from="/vicon/cf1/cf1" to="/vicon/firefly_sbx/firefly_sbx" /> -->
 
     <node pkg="rosbag" type="play" name="player1" output="screen" 
-        args="$(arg path)$(arg file_1).bag 
-        --topics /camera/image /cf1/imu
-        --clock -l" />
+        args="$(arg in_path).bag 
+        --topics /image_raw /imu
+        --clock"
+        />
 </launch>
