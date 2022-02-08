@@ -13,7 +13,7 @@ extern "C"{
 
 #include <iostream>
 
-const int gyro_address = 0x69;
+const int gyro_address = 0x68;
 int init_I3G4250D(int file){
 
 
