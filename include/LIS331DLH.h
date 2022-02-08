@@ -49,15 +49,15 @@ struct LIS331DHL_accelerations {
 // int file;
 const int imu_address = 0x18;
 
-int init_LIS331DHL(){
-    char filename[20];
-    int adapter_nr = 1;
+int init_LIS331DHL(int file){
+    // char filename[20];
+    // int adapter_nr = 1;
 
-    snprintf(filename, 19, "/dev/i2c-%d", adapter_nr);
-    int file = open(filename, O_RDWR);
-    if (file < 0){
-        return -1;
-    }
+    // snprintf(filename, 19, "/dev/i2c-%d", adapter_nr);
+    // int file = open(filename, O_RDWR);
+    // if (file < 0){
+    //     return -1;
+    // }
 
     if (ioctl(file, I2C_SLAVE, imu_address) < 0){
         return -1;
@@ -83,8 +83,10 @@ int init_LIS331DHL(){
     }
 
     // res = i2c_smbus_read_byte_data(file, STATUS_REG);
-    return file;
+    return 0;
 }
+
+
 
 uint8_t xyz_available(uint8_t status_reg){
     return (status_reg & (1 << 3)) >> 3;
