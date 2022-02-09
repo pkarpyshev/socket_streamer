@@ -49,6 +49,7 @@ int main(int argc, char *argv[]){
 
     auto start = std::chrono::steady_clock::now();
     while(nh.ok()){
+        start = std::chrono::steady_clock::now();
         if (accelerometer.connect() == 0){
             accelerometer.read_xyz();
             imu_msg.linear_acceleration.x = accelerometer.accelerations.x;
@@ -68,12 +69,10 @@ int main(int argc, char *argv[]){
             std::cout << "Gyroscope: connect error" << std::endl;
         }
         auto gyro_duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
-        auto common_duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
 
-        std::cout << accel_duration << "; " << gyro_duration << "; " << common_duration <<std::endl;
-
-        start = std::chrono::steady_clock::now();
         imu_pub.publish(imu_msg);
+        auto common_duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
+        std::cout << accel_duration << "; " << gyro_duration << "; " << common_duration <<std::endl;
         // publish_rate.sleep();
     }
     return 0;
