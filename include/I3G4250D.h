@@ -89,9 +89,13 @@ private:
         self_test_enable |spi_mode_selection;
 
 public:
-    I3G4250D(/* args */);
+    I3G4250D(/* args */){
 
-    ~I3G4250D();
+    };
+
+    ~I3G4250D(){
+
+    };
 
     // Connect to device
     int connect(const int file){
@@ -100,7 +104,7 @@ public:
             return -1;
         }
         return 0;
-    }
+    };
 
     int init(int file){
         if (connect(file)){
@@ -122,16 +126,7 @@ public:
             return -1;
         }
         return 0;
-    }
+    };
 };
-
-I3G4250D::I3G4250D(/* args */)
-{
-}
-
-I3G4250D::~I3G4250D()
-{
-}
-
 
 #endif

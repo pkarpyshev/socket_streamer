@@ -17,6 +17,7 @@ uint8_t select_device(int file, int address){
 }
 
 I3G4250D gyroscope;
+LIS331DLH accelerometer;
 
 int main(int argc, char *argv[]){
     char filename[20];
@@ -27,9 +28,9 @@ int main(int argc, char *argv[]){
         exit(1);
     }
 
-    // if (init_LIS331DHL(file) < 0) {
-    //     std::cout << "init_LIS331DHL error." << std::endl;
-    // }
+    if (accelerometer.init(file) < 0) {
+        std::cout << "LIS331DLH.init() error." << std::endl;
+    }
 
     if (gyroscope.init(file) < 0){
         std::cout << "I3G4250D.init() error." << std::endl;
