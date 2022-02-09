@@ -1,4 +1,3 @@
-// #include "netconfig.hpp"
 #include "camera_config.hpp"
 
 #include <opencv2/highgui/highgui.hpp>
@@ -13,13 +12,22 @@
 const int buf_size = CAM_HEIGHT*CAM_WIDTH;
 
 int main(int argc, char *argv[]){
-
     ros::init(argc, argv, "camera_node");
     ros::NodeHandle nh;
-    image_transport::ImageTransport it(nh);
-    image_transport::Publisher pub = it.advertise("camera/image", 1);
-    sensor_msgs::ImagePtr msg;
-    
+    // image_transport::ImageTransport it(nh);
+    ros::Rate loop_rate(20);
+
+    // image_transport::Publisher pub = it.advertise("cam0/image_raw", 1);
+    ros::Publisher pub = nh.advertise<sensor_msgs::Image>("cam0/image_raw", 1);
+
+    sensor_msgs::Image msg;
+    msg.header.frame_id = "cam0";
+    msg.height = CAM_HEIGHT;
+    msg.width = CAM_WIDTH;
+    msg.encoding = "mono8";
+    msg.is_bigendian = 0;
+    msg.step = CAM_WIDTH;
+
     cv::VideoCapture camera(0);
     camera.set(cv::CAP_PROP_FRAME_WIDTH,  CAM_WIDTH);
     camera.set(cv::CAP_PROP_FRAME_HEIGHT, CAM_HEIGHT);
@@ -36,18 +44,19 @@ int main(int argc, char *argv[]){
     std::cout << "Resolution: " << frame_gray.size << std::endl;
     std::cout << "elemSize: " << frame_gray.elemSize() << std::endl;
 
-    cv::namedWindow("Client", cv::WINDOW_AUTOSIZE);
+    cv_bridge::CvImage cv_image;
+    cv_image.encoding = msg.encoding;
     while (nh.ok()){
         camera >> frame;
         cv::cvtColor(frame, frame_gray, cv::COLOR_BGR2GRAY);
-
-        // cv::imshow("Server", frame_gray);
-        // if (cv::waitKey(10) >= 0)
-        //     break;
-        msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", frame_gray).toImageMsg();
+        // msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", frame_gray).toImageMsg();
+        cv_image.image = frame_gray;
+        cv_image.toImageMsg(msg);
+        msg.header.stamp = ros::Time::now();
+        
         pub.publish(msg);
         ros::spinOnce();
-        // loop_rate.sleep();
+        loop_rate.sleep();
     }
     return 0;
 }
