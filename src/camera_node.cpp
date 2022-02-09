@@ -21,7 +21,6 @@ int main(int argc, char *argv[]){
     ros::Publisher pub = nh.advertise<sensor_msgs::Image>("cam0/image_raw", 1);
 
     sensor_msgs::Image msg;
-    msg.header.frame_id = "cam0";
     msg.height = CAM_HEIGHT;
     msg.width = CAM_WIDTH;
     msg.encoding = "mono8";
@@ -52,6 +51,8 @@ int main(int argc, char *argv[]){
         // msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", frame_gray).toImageMsg();
         cv_image.image = frame_gray;
         cv_image.toImageMsg(msg);
+        
+        msg.header.frame_id = "cam0";
         msg.header.stamp = ros::Time::now();
         
         pub.publish(msg);
