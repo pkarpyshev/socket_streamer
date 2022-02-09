@@ -60,7 +60,7 @@ int main(int argc, char *argv[]){
         if (gyroscope.connect() == 0){
             gyroscope.read_xyz();
             for (int i = 15; i >= 0; i--){
-                std::cout << ((gyroscope.accelerations.z >> i) & i);
+                std::cout << ((gyroscope.accelerations.z >> i) & 1);
                 if (i % 4 == 0)
                     std::cout << " ";
             }
