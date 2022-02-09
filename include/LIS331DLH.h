@@ -99,7 +99,7 @@ private:
     };
 
     inline int get_data_status(){
-        return i2c_smbus_read_byte_data(file_id, status_reg) & (1 << 3);
+        return (i2c_smbus_read_byte_data(file_id, status_reg) & (1 << 3) >> 3);
     };
 public:
     LIS331DLH(int file): file_id(file){
@@ -145,12 +145,15 @@ public:
         return 0;
     };
 
-    void read_xyz(){
+    int16_t read_xyz(){
+        int16_t temp = 0;
         if (get_data_status()){
+            temp = read_axis(out_ZH, out_ZL);
             accelerations.x = (read_axis(out_XH, out_XL) >> 4) * scale;
             accelerations.y = (read_axis(out_YH, out_YL) >> 4) * scale;
-            accelerations.z = (read_axis(out_ZH, out_ZL) >> 4) * scale;
+            accelerations.z = (temp >> 4) * scale;
         }
+        return temp;
     };
 
     data_t accelerations = {0.0f, 0.0f, 0.0f};

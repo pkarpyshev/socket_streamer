@@ -51,7 +51,14 @@ int main(int argc, char *argv[]){
         if (accelerometer.connect() < 0){
             std::cout << "Acceleromter: connect error" << std::endl;
         } else {
-            accelerometer.read_xyz();
+            int16_t temp = accelerometer.read_xyz();
+            for (int i = 15; i >=0; i--){
+                std::cout << ((temp >> i) & 1);
+                if (i % 4 == 0){
+                    std::cout << " ";
+                }
+                std::cout << std::endl;
+            }
             imu_msg.linear_acceleration.x = accelerometer.accelerations.x;
             imu_msg.linear_acceleration.y = accelerometer.accelerations.y;
             imu_msg.linear_acceleration.z = accelerometer.accelerations.z;
