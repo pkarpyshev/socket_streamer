@@ -57,8 +57,8 @@ int main(int argc, char *argv[]){
                 if (i % 4 == 0){
                     std::cout << " ";
                 }
-                std::cout << std::endl;
             }
+            std::cout << std::endl;
             imu_msg.linear_acceleration.x = accelerometer.accelerations.x;
             imu_msg.linear_acceleration.y = accelerometer.accelerations.y;
             imu_msg.linear_acceleration.z = accelerometer.accelerations.z;
