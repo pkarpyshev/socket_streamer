@@ -76,7 +76,7 @@ private:
         block_data_update | big_endian_selection | full_sclae_selection | 
         self_test_sign | self_test_enable |spi_mode_selection;
 
-    const double scale = 4.0f / 2048.0f;
+    const double scale = 4.0f / 2048;
     const uint8_t status_reg = 0x27;
     const uint8_t out_XL = 0x28;
     const uint8_t out_XH = 0x29;
@@ -91,11 +91,15 @@ private:
         double z;
     };
 
-    int read_axis(const uint8_t msb_reg, const uint8_t lsb_reg) const {
+    inline int read_axis(const uint8_t msb_reg, const uint8_t lsb_reg) const {
         __s32 msb, lsb;
         msb = i2c_smbus_read_byte_data(file_id, msb_reg);
         lsb = i2c_smbus_read_byte_data(file_id, lsb_reg);
         return (msb << 8) | (lsb);
+    };
+
+    inline int get_data_status(){
+        return i2c_smbus_read_byte_data(file_id, who_am_i_reg) & (1 << 3);
     };
 public:
     LIS331DLH(int file): file_id(file){
@@ -141,11 +145,12 @@ public:
         return 0;
     };
 
-    int read_xyz(){
-        accelerations.x = (read_axis(out_XH, out_XL) >> 4) * scale;
-        accelerations.y = (read_axis(out_YH, out_YL) >> 4) * scale;
-        accelerations.z = (read_axis(out_ZH, out_ZL) >> 4) * scale;
-        return 0;
+    void read_xyz(){
+        if (get_data_status()){
+            accelerations.x = (read_axis(out_XH, out_XL) >> 4) * scale;
+            accelerations.y = (read_axis(out_YH, out_YL) >> 4) * scale;
+            accelerations.z = (read_axis(out_ZH, out_ZL) >> 4) * scale;
+        }
     };
 
     data_t accelerations = {0.0f, 0.0f, 0.0f};
