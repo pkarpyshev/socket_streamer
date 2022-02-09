@@ -99,7 +99,7 @@ private:
     };
 
     inline int get_data_status(){
-        return i2c_smbus_read_byte_data(file_id, who_am_i_reg) & (1 << 3);
+        return i2c_smbus_read_byte_data(file_id, status_reg) & (1 << 3);
     };
 public:
     LIS331DLH(int file): file_id(file){
