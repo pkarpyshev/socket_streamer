@@ -86,12 +86,12 @@ private:
     const uint8_t out_ZH = 0x2D;
     
     struct data_t {
-        double x;
-        double y;
-        double z;
+        int16_t x;
+        int16_t y;
+        int16_t z;
     };
 
-    inline int read_axis(const uint8_t msb_reg, const uint8_t lsb_reg) const {
+    inline int16_t read_axis(const uint8_t msb_reg, const uint8_t lsb_reg) const {
         __s32 msb, lsb;
         msb = i2c_smbus_read_byte_data(file_id, msb_reg);
         lsb = i2c_smbus_read_byte_data(file_id, lsb_reg);
@@ -146,15 +146,18 @@ public:
     };
 
     int16_t read_xyz(){
-        int16_t temp = 0;
+        // int16_t temp = 0;
         if (get_data_status()){
-            temp = read_axis(out_ZH, out_ZL);
-            accelerations.x = (read_axis(out_XH, out_XL) >> 4) * scale;
-            accelerations.y = (read_axis(out_YH, out_YL) >> 4) * scale;
-            accelerations.z = (temp >> 4) * scale;
+            // temp = read_axis(out_ZH, out_ZL);
+            // accelerations.x = (read_axis(out_XH, out_XL) >> 4) * scale;
+            // accelerations.y = (read_axis(out_YH, out_YL) >> 4) * scale;
+            // accelerations.z = (temp >> 4) * scale;
+            accelerations.x = read_axis(out_XH, out_XL);
+            accelerations.y = read_axis(out_YH, out_YL);
+            accelerations.z = read_axis(out_ZH, out_ZL);
         }
-        return temp;
+        return 0;
     };
 
-    data_t accelerations = {0.0f, 0.0f, 0.0f};
+    data_t accelerations = {0, 0, 0};
 };

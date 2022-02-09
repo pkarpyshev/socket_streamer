@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
         } else {
             int16_t temp = accelerometer.read_xyz();
             for (int i = 15; i >=0; i--){
-                std::cout << ((temp >> i) & 1);
+                std::cout << ((accelerometer.accelerations.z >> i) & 1);
                 if (i % 4 == 0){
                     std::cout << " ";
                 }
