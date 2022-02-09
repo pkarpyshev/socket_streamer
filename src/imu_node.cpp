@@ -48,7 +48,7 @@ int main(int argc, char *argv[]){
     
     // auto start = std::chrono::steady_clock::now();
     while(nh.ok()){
-        if (accelerometer.connect()){
+        if (accelerometer.connect() == 0){
             accelerometer.read_xyz();
             imu_msg.linear_acceleration.x = accelerometer.accelerations.x;
             imu_msg.linear_acceleration.y = accelerometer.accelerations.y;
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
             std::cout << "Acceleromter: connect error" << std::endl;
         }
 
-        if (gyroscope.connect() < 0){
+        if (gyroscope.connect() == 0){
             gyroscope.read_xyz();
             for (int i = 15; i >= 0; i--){
                 std::cout << ((gyroscope.accelerations.z >> i) & i);
