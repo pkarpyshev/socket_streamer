@@ -52,12 +52,10 @@ int main(int argc, char *argv[]){
         if (accelerometer.connect() < 0){
             std::cout << "Acceleromter: connect error" << std::endl;
         } else {
-        //     res = i2c_smbus_read_byte_data(file, STATUS_REG);
-        //     if( xyz_available(res) ) {
-        //         LIS331DHL_accelerations xyz_accel = read_xyz_accel(file);
-        //         imu_msg.linear_acceleration.x = xyz_accel.x;
-        //         imu_msg.linear_acceleration.y = xyz_accel.y;
-        //         imu_msg.linear_acceleration.z = xyz_accel.z;
+            accelerometer.read_xyz();
+            imu_msg.linear_acceleration.x = accelerometer.accelerations.x;
+            imu_msg.linear_acceleration.y = accelerometer.accelerations.y;
+            imu_msg.linear_acceleration.z = accelerometer.accelerations.z;
         }
 
         if (gyroscope.connect() < 0){
