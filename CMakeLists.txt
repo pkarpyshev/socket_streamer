@@ -22,10 +22,14 @@ include_directories(${catkin_INCLUDE_DIRS})
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 include_directories(include)
-add_executable(server_node src/server.cpp)
-add_executable(restamper_node src/restamper.cpp)
-add_executable(imu_node src/imu_node.cpp)
+# add_executable(server_node src/server.cpp)
+# add_executable(restamper_node src/restamper.cpp)
 
-target_link_libraries(server_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} )
-target_link_libraries(restamper_node ${catkin_LIBRARIES} )
+add_executable(imu_node src/imu_node.cpp)
+add_executable(camera_node src/camera_node.cpp)
+
+# target_link_libraries(server_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} )
+# target_link_libraries(restamper_node ${catkin_LIBRARIES} )
+
 target_link_libraries(imu_node ${catkin_LIBRARIES} i2c)
+target_link_libraries(camera_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} )

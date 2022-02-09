@@ -7,6 +7,9 @@ client:
 server:
 	cd ../.. && catkin_make --only-pkg-with-deps socket_streamer
 
+camera:
+	cd ../.. && catkin_make --only-pkg-with-deps socket_streamer --make-args -j2 --cmake-args -O3
+
 imu:
 	cd ../.. && catkin_make --only-pkg-with-deps socket_streamer --make-args -j2 --cmake-args -O3
 
