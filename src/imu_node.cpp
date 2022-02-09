@@ -47,11 +47,12 @@ int main(int argc, char *argv[]){
     static sensor_msgs::Imu imu_msg;
     
     // auto start = std::chrono::steady_clock::now();
-    int res = -1;
     while(nh.ok()){
         if (accelerometer.connect() < 0){
             std::cout << "Acceleromter: connect error" << std::endl;
         } else {
+            uint8_t id = accelerometer.who_am_i();
+            std::cout << (int)id << std::endl;
             accelerometer.read_xyz();
             imu_msg.linear_acceleration.x = accelerometer.accelerations.x;
             imu_msg.linear_acceleration.y = accelerometer.accelerations.y;

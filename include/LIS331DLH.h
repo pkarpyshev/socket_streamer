@@ -57,7 +57,7 @@ class LIS331DLH {
 private:
     const int address = 0x18;
     const int file_id;
-    const __u8 who_am_i = 0x0F;
+    const __u8 who_am_i_reg = 0x0F;
 
     const uint8_t ctrl_reg1 = 0x20;
     const uint8_t power_mode = (1 << 5);
@@ -76,7 +76,7 @@ private:
         block_data_update | big_endian_selection | full_sclae_selection | 
         self_test_sign | self_test_enable |spi_mode_selection;
 
-    const float scale = 4.0f / 2048;
+    const double scale = 4.0f / 2048;
     const uint8_t status_reg = 0x27;
     const uint8_t out_XL = 0x28;
     const uint8_t out_XH = 0x29;
@@ -86,9 +86,9 @@ private:
     const uint8_t out_ZH = 0x2D;
     
     struct data_t {
-        float x;
-        float y;
-        float z;
+        double x;
+        double y;
+        double z;
     };
 
     inline int read_axis(const uint8_t msb_reg, const uint8_t lsb_reg) const {
@@ -115,12 +115,16 @@ public:
         return 0;
     };
 
+    uint8_t who_am_i(){
+        return i2c_smbus_read_byte_data(file_id, who_am_i_reg);
+    };
+
     int init(){
         if (connect()){
             return -1;
         }
         
-        if (i2c_smbus_read_byte_data(file_id, who_am_i) < 0){
+        if (i2c_smbus_read_byte_data(file_id, who_am_i_reg) < 0){
             printf("Gyroscope: who_am_i failed. Errno %s \n",strerror(errno));
             return -1;
         }

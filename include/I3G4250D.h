@@ -69,7 +69,7 @@ class I3G4250D
 private:
     const int address = 0x68;
     const int file_id;
-    const __u8 who_am_i = 0x0F;
+    const __u8 who_am_i_reg = 0x0F;
 
     const uint8_t ctrl_reg1 = 0x20;
     const uint8_t data_rate = (1 << 7) | (0 << 6);
@@ -107,12 +107,16 @@ public:
         return 0;
     };
 
+    uint8_t who_am_i(){
+        return i2c_smbus_read_byte_data(file_id, who_am_i_reg);
+    }
+
     int init(){
         if (connect()){
             return -1;
         }
         
-        if (i2c_smbus_read_byte_data(file_id, who_am_i) < 0){
+        if (i2c_smbus_read_byte_data(file_id, who_am_i_reg) < 0){
             printf("Gyroscope: who_am_i failed. Errno %s \n",strerror(errno));
             return -1;
         }
