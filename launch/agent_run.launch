@@ -1,0 +1,15 @@
+<launch>
+    <!-- Launch camera node -->
+    <node pkg="socket_streamer" type="camera_node" name="camera_node" output="screen" />
+    
+    <!-- Launch imu node -->
+    <node pkg="socket_streamer" type="imu_node" name="imu_node" output="screen" />
+
+    <!-- start record -->
+    <arg name="file_name" default="seq2" />
+    <node pkg="rosbag" type="record" name="recorder" output="screen" 
+        args=" /cam0/image_raw /imu0
+        -O $(dirname)/$(arg file_name).bag --duration=120" 
+    />
+    
+</launch>
