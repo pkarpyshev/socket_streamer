@@ -76,7 +76,7 @@ private:
         block_data_update | big_endian_selection | full_sclae_selection | 
         self_test_sign | self_test_enable |spi_mode_selection;
 
-    const double scale = 4.0f / 2048;
+    const float scale = 4.0f / 2048;
     const uint8_t status_reg = 0x27;
     const uint8_t out_XL = 0x28;
     const uint8_t out_XH = 0x29;
@@ -86,9 +86,9 @@ private:
     const uint8_t out_ZH = 0x2D;
     
     struct data_t {
-        int16_t x;
-        int16_t y;
-        int16_t z;
+        float x;
+        float y;
+        float z;
     };
 
     inline int16_t read_axis(const uint8_t msb_reg, const uint8_t lsb_reg) const {
@@ -152,9 +152,9 @@ public:
             // accelerations.x = (read_axis(out_XH, out_XL) >> 4) * scale;
             // accelerations.y = (read_axis(out_YH, out_YL) >> 4) * scale;
             // accelerations.z = (temp >> 4) * scale;
-            accelerations.x = read_axis(out_XH, out_XL);
-            accelerations.y = read_axis(out_YH, out_YL);
-            accelerations.z = read_axis(out_ZH, out_ZL);
+            accelerations.x = (read_axis(out_XH, out_XL) >> 4) * scale;
+            accelerations.y = (read_axis(out_YH, out_YL) >> 4) * scale;
+            accelerations.z = (read_axis(out_ZH, out_ZL) >> 4) * scale;
         }
         return 0;
     };
