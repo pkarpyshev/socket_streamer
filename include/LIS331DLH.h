@@ -113,11 +113,12 @@ static inline int16_t read_y_axis(int file){
     return (msb << 8) | (lsb);
 }
 
-LIS331DHL_accelerations read_xyz(int file){
+LIS331DHL_accelerations read_xyz_accel(int file){
     LIS331DHL_accelerations res;
     res.x = (read_x_axis(file) >> 4) * scale;
     res.y = (read_y_axis(file) >> 4) * scale;
     res.z = (read_z_axis(file) >> 4) * scale;
     return res;
 }
+
 #endif
