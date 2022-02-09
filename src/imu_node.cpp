@@ -64,10 +64,10 @@ int main(int argc, char *argv[]){
             //     if (i % 4 == 0)
             //         std::cout << " ";
             // }
-            std::cout << gyroscope.accelerations.z << std::endl;
-            // imu_msg.linear_acceleration.x = xyz_accel.x;
-            // imu_msg.linear_acceleration.y = xyz_accel.y;
-            // imu_msg.linear_acceleration.z = xyz_accel.z;
+            std::cout << gyroscope.velocity.z << std::endl;
+            imu_msg.angular_velocity.x = gyroscope.velocity.x;
+            imu_msg.angular_velocity.y = gyroscope.velocity.y;
+            imu_msg.angular_velocity.z = gyroscope.velocity.z;
         } else {
             std::cout << "Gyroscope: connect error" << std::endl;
         }

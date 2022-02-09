@@ -38,6 +38,7 @@ private:
         self_test_enable |spi_mode_selection;
 
     const uint8_t status_reg = 0x27;
+    const double scale = 245.0f / 32768;
     const uint8_t out_XL = 0x28;
     const uint8_t out_XH = 0x29;
     const uint8_t out_YL = 0x2A;
@@ -46,9 +47,9 @@ private:
     const uint8_t out_ZH = 0x2D;
 
     struct data_t {
-        int16_t x;
-        int16_t y;
-        int16_t z;
+        double x;
+        double y;
+        double z;
     };
 
     inline int16_t read_axis(const uint8_t msb_reg, const uint8_t lsb_reg) const {
@@ -111,14 +112,14 @@ public:
 
     int16_t read_xyz(){
         if (get_data_status()){
-            accelerations.x = read_axis(out_XH, out_XL);
-            accelerations.y = read_axis(out_YH, out_YL);
-            accelerations.z = read_axis(out_ZH, out_ZL);
+            velocity.x = read_axis(out_XH, out_XL) * scale;
+            velocity.y = read_axis(out_YH, out_YL) * scale;
+            velocity.z = read_axis(out_ZH, out_ZL) * scale;
         }
         return 0;
     };
     
-    data_t accelerations = {0, 0, 0};
+    data_t velocity = {0, 0, 0};
 };
 
 #endif
