@@ -76,7 +76,7 @@ private:
         block_data_update | big_endian_selection | full_sclae_selection | 
         self_test_sign | self_test_enable |spi_mode_selection;
 
-    const double scale = 4.0f / 2048;
+    const double scale = 4.0f / 2048.0f;
     const uint8_t status_reg = 0x27;
     const uint8_t out_XL = 0x28;
     const uint8_t out_XH = 0x29;
@@ -91,7 +91,7 @@ private:
         double z;
     };
 
-    inline int read_axis(const uint8_t msb_reg, const uint8_t lsb_reg) const {
+    int read_axis(const uint8_t msb_reg, const uint8_t lsb_reg) const {
         __s32 msb, lsb;
         msb = i2c_smbus_read_byte_data(file_id, msb_reg);
         lsb = i2c_smbus_read_byte_data(file_id, lsb_reg);
