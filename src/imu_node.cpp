@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
     ros::NodeHandle nh;
     ros::Publisher imu_pub = nh.advertise<sensor_msgs::Imu>("imu0", 10);
     static sensor_msgs::Imu imu_msg;
-    // ros::Rate publish_rate(200);
+    ros::Rate publish_rate(200);
 
     auto start = std::chrono::steady_clock::now();
     while(nh.ok()){
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]){
         imu_pub.publish(imu_msg);
         auto common_duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
         std::cout << accel_duration << "; " << gyro_duration << "; " << common_duration <<std::endl;
-        // publish_rate.sleep();
+        publish_rate.sleep();
     }
     return 0;
 }
