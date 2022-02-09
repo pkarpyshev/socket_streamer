@@ -34,7 +34,8 @@ private:
         block_data_update | big_endian_selection | full_sclae_selection | 
         self_test_sign | self_test_enable |spi_mode_selection;
 
-    const float scale = 4.0f / 2048;
+    const float scale = 9.81f;              // from g to m/s^2
+    const float resolution = 4.0f / 2048;   // from bits to g
     const uint8_t status_reg = 0x27;
     const uint8_t out_XL = 0x28;
     const uint8_t out_XH = 0x29;
@@ -108,9 +109,9 @@ public:
 
     int16_t read_xyz(){
         if (get_data_status()){
-            accelerations.x = (read_axis(out_XH, out_XL) >> 4) * scale;
-            accelerations.y = (read_axis(out_YH, out_YL) >> 4) * scale;
-            accelerations.z = (read_axis(out_ZH, out_ZL) >> 4) * scale;
+            accelerations.x = (read_axis(out_XH, out_XL) >> 4) * resolution * scale;
+            accelerations.y = (read_axis(out_YH, out_YL) >> 4) * resolution * scale;
+            accelerations.z = (read_axis(out_ZH, out_ZL) >> 4) * resolution * scale;
         }
         return 0;
     };

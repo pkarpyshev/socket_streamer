@@ -38,7 +38,8 @@ private:
         self_test_enable |spi_mode_selection;
 
     const uint8_t status_reg = 0x27;
-    const double scale = 245.0f / 32768;
+    const double resolution = 245.0f / 32768;   // from  bits to degrees per second (dps)
+    const double scale = 3.141592f / 180.0f;    // from dps to radians per second (rps)
     const uint8_t out_XL = 0x28;
     const uint8_t out_XH = 0x29;
     const uint8_t out_YL = 0x2A;
@@ -112,9 +113,9 @@ public:
 
     int16_t read_xyz(){
         if (get_data_status()){
-            velocity.x = read_axis(out_XH, out_XL) * scale;
-            velocity.y = read_axis(out_YH, out_YL) * scale;
-            velocity.z = read_axis(out_ZH, out_ZL) * scale;
+            velocity.x = read_axis(out_XH, out_XL) * resolution * scale;
+            velocity.y = read_axis(out_YH, out_YL) * resolution * scale;
+            velocity.z = read_axis(out_ZH, out_ZL) * resolution * scale;
         }
         return 0;
     };
