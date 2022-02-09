@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
     ros::NodeHandle nh;
     ros::Publisher imu_pub = nh.advertise<sensor_msgs::Imu>("imu0", 1);
     static sensor_msgs::Imu imu_msg;
-    
+    ros::Rate publish_rate(200);
     // auto start = std::chrono::steady_clock::now();
     while(nh.ok()){
         if (accelerometer.connect() == 0){
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]){
         }
 
         imu_pub.publish(imu_msg);
-        ros::spinOnce();
+        publish_rate.sleep();
     }
     return 0;
 }
