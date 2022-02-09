@@ -67,29 +67,30 @@ extern "C"{
 class I3G4250D
 {
 private:
-    static const int address = 0x68;
-    static const __u8 who_am_i = 0x0F;
+    const int address = 0x68;
+    const int file_id;
+    const __u8 who_am_i = 0x0F;
 
-    static const uint8_t ctrl_reg1 = 0x20;
-    static const uint8_t data_rate = (1 << 7) | (0 << 6);
-    static const uint8_t bandwitdh = (0 << 5) | (0 << 4);
-    static const uint8_t power_mode = (1 << 3);
-    static const uint8_t axes_enable = (1 << 2) | (1 << 1) | (1 << 0);
-    static const uint8_t ctrl_reg1_value = 
+    const uint8_t ctrl_reg1 = 0x20;
+    const uint8_t data_rate = (1 << 7) | (0 << 6);
+    const uint8_t bandwitdh = (0 << 5) | (0 << 4);
+    const uint8_t power_mode = (1 << 3);
+    const uint8_t axes_enable = (1 << 2) | (1 << 1) | (1 << 0);
+    const uint8_t ctrl_reg1_value = 
         data_rate | bandwitdh |
         power_mode | axes_enable;
 
-    static const uint8_t ctrl_reg4 = 0x23;
-    static const uint8_t big_endian_selection = (0 << 6);
-    static const uint8_t full_sclae_selection = (0 << 5) | (0 << 4);
-    static const uint8_t self_test_enable = (0 << 2) | (0 << 1);
-    static const uint8_t spi_mode_selection = (0 << 0);
-    static const uint8_t ctrl_reg4_value = 
+    const uint8_t ctrl_reg4 = 0x23;
+    const uint8_t big_endian_selection = (0 << 6);
+    const uint8_t full_sclae_selection = (0 << 5) | (0 << 4);
+    const uint8_t self_test_enable = (0 << 2) | (0 << 1);
+    const uint8_t spi_mode_selection = (0 << 0);
+    const uint8_t ctrl_reg4_value = 
         big_endian_selection | full_sclae_selection | 
         self_test_enable |spi_mode_selection;
 
 public:
-    I3G4250D(/* args */){
+    I3G4250D(int file): file_id(file) {
 
     };
 
@@ -98,30 +99,30 @@ public:
     };
 
     // Connect to device
-    int connect(const int file){
-        if (ioctl(file, I2C_SLAVE, address) < 0){
+    int connect(){
+        if (ioctl(file_id, I2C_SLAVE, address) < 0){
             printf("Gyroscope: ioctl failed. Errno %s \n",strerror(errno));
             return -1;
         }
         return 0;
     };
 
-    int init(int file){
-        if (connect(file)){
+    int init(){
+        if (connect()){
             return -1;
         }
         
-        if (i2c_smbus_read_byte_data(file, who_am_i) < 0){
+        if (i2c_smbus_read_byte_data(file_id, who_am_i) < 0){
             printf("Gyroscope: who_am_i failed. Errno %s \n",strerror(errno));
             return -1;
         }
         
-        if (i2c_smbus_write_byte_data(file, ctrl_reg1, ctrl_reg1_value) < 0){
+        if (i2c_smbus_write_byte_data(file_id, ctrl_reg1, ctrl_reg1_value) < 0){
             printf("Gyroscope: ctrl_reg1 failed. Errno %s \n",strerror(errno));
             return -1;
         }
 
-        if (i2c_smbus_write_byte_data(file, ctrl_reg4, ctrl_reg4_value) < 0){
+        if (i2c_smbus_write_byte_data(file_id, ctrl_reg4, ctrl_reg4_value) < 0){
             printf("Gyroscope: ctrl_reg4 failed. Errno %s \n",strerror(errno));
             return -1;
         }
