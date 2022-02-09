@@ -146,12 +146,7 @@ public:
     };
 
     int16_t read_xyz(){
-        // int16_t temp = 0;
         if (get_data_status()){
-            // temp = read_axis(out_ZH, out_ZL);
-            // accelerations.x = (read_axis(out_XH, out_XL) >> 4) * scale;
-            // accelerations.y = (read_axis(out_YH, out_YL) >> 4) * scale;
-            // accelerations.z = (temp >> 4) * scale;
             accelerations.x = (read_axis(out_XH, out_XL) >> 4) * scale;
             accelerations.y = (read_axis(out_YH, out_YL) >> 4) * scale;
             accelerations.z = (read_axis(out_ZH, out_ZL) >> 4) * scale;
