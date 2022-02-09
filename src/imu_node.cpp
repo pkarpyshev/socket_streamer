@@ -43,10 +43,11 @@ int main(int argc, char *argv[]){
     
     ros::init(argc, argv, "imu_node");
     ros::NodeHandle nh;
-    ros::Publisher imu_pub = nh.advertise<sensor_msgs::Imu>("imu0", 1);
+    ros::Publisher imu_pub = nh.advertise<sensor_msgs::Imu>("imu0", 10);
     static sensor_msgs::Imu imu_msg;
     // ros::Rate publish_rate(200);
-    // auto start = std::chrono::steady_clock::now();
+
+    auto start = std::chrono::steady_clock::now();
     while(nh.ok()){
         if (accelerometer.connect() == 0){
             accelerometer.read_xyz();
@@ -56,6 +57,8 @@ int main(int argc, char *argv[]){
         } else {
             std::cout << "Acceleromter: connect error" << std::endl;
         }
+        std::cout << "Accel duration: " <<
+            std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count() << "ms" << std::endl;
 
         if (gyroscope.connect() == 0){
             gyroscope.read_xyz();
@@ -65,7 +68,13 @@ int main(int argc, char *argv[]){
         } else {
             std::cout << "Gyroscope: connect error" << std::endl;
         }
-
+        
+        std::cout << "Gyro duration: " <<
+            std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count() << "ms" << std::endl;
+        
+        std::cout << "Common duration:" <<
+            std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count() << "ms" << std::endl;
+        start = std::chrono::steady_clock::now();
         imu_pub.publish(imu_msg);
         // publish_rate.sleep();
     }
