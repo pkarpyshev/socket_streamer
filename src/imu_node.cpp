@@ -48,24 +48,28 @@ int main(int argc, char *argv[]){
     
     // auto start = std::chrono::steady_clock::now();
     while(nh.ok()){
-        if (accelerometer.connect() < 0){
-            std::cout << "Acceleromter: connect error" << std::endl;
-        } else {
+        if (accelerometer.connect()){
             accelerometer.read_xyz();
             imu_msg.linear_acceleration.x = accelerometer.accelerations.x;
             imu_msg.linear_acceleration.y = accelerometer.accelerations.y;
             imu_msg.linear_acceleration.z = accelerometer.accelerations.z;
+        } else {
+            std::cout << "Acceleromter: connect error" << std::endl;
         }
 
         if (gyroscope.connect() < 0){
-            std::cout << "Gyroscope: connect error" << std::endl;
+            gyroscope.read_xyz();
+            for (int i = 15; i >= 0; i--){
+                std::cout << ((gyroscope.accelerations.z >> i) & i);
+                if (i % 4 == 0)
+                    std::cout << " ";
+            }
+            std::cout << std::endl;
+            // imu_msg.linear_acceleration.x = xyz_accel.x;
+            // imu_msg.linear_acceleration.y = xyz_accel.y;
+            // imu_msg.linear_acceleration.z = xyz_accel.z;
         } else {
-        //     res = i2c_smbus_read_byte_data(file, STATUS_REG);
-        //     if( xyz_available(res) ) {
-        //         LIS331DHL_accelerations xyz_accel = read_xyz_accel(file);
-        //         imu_msg.linear_acceleration.x = xyz_accel.x;
-        //         imu_msg.linear_acceleration.y = xyz_accel.y;
-        //         imu_msg.linear_acceleration.z = xyz_accel.z;
+            std::cout << "Gyroscope: connect error" << std::endl;
         }
 
         imu_pub.publish(imu_msg);

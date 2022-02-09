@@ -11,48 +11,6 @@ extern "C"{
     #include <stdint.h>
 }
 
-
-struct LIS331DHL_accelerations {
-    float x;
-    float y;
-    float z;
-};
-
-// uint8_t xyz_available(uint8_t status_reg){
-//     return (status_reg & (1 << 3)) >> 3;
-// }
-
-// static inline int16_t read_z_axis(int file){
-//     __s32 msb, lsb;
-//     msb = i2c_smbus_read_byte_data(file, OUT_ZH);
-//     lsb = i2c_smbus_read_byte_data(file, OUT_ZL);
-//     return (msb << 8) | (lsb);
-// }
-
-// static inline int16_t read_x_axis(int file){
-//     __s32 msb, lsb;
-//     msb = i2c_smbus_read_byte_data(file, OUT_XH);
-//     lsb = i2c_smbus_read_byte_data(file, OUT_XL);
-//     return (msb << 8) | (lsb);
-// }
-
-// static inline int16_t read_y_axis(int file){
-//     __s32 msb, lsb;    
-//     msb = i2c_smbus_read_byte_data(file, OUT_YH);
-//     lsb = i2c_smbus_read_byte_data(file, OUT_YL);
-//     return (msb << 8) | (lsb);
-// }
-
-// LIS331DHL_accelerations read_xyz_accel(int file){
-//     LIS331DHL_accelerations res;
-//     res.x = (read_x_axis(file) >> 4) * scale;
-//     res.y = (read_y_axis(file) >> 4) * scale;
-//     res.z = (read_z_axis(file) >> 4) * scale;
-//     return res;
-// }
-
-#endif
-
 class LIS331DLH {
 private:
     const int address = 0x18;
@@ -113,14 +71,18 @@ public:
     // Connect to device
     int connect(){
         if (ioctl(file_id, I2C_SLAVE, address) < 0){
-            printf("Gyroscope: ioctl failed. Errno %s \n",strerror(errno));
+            printf("Accelleromter: ioctl failed. Errno %s \n",strerror(errno));
             return -1;
         }
         return 0;
     };
 
-    uint8_t who_am_i(){
-        return i2c_smbus_read_byte_data(file_id, who_am_i_reg);
+    int who_am_i(){
+        if(i2c_smbus_read_byte_data(file_id, who_am_i_reg) < 0){
+            printf("Accelleromter: who_am_i failed. Errno %s \n",strerror(errno));
+            return -1;
+        }
+        return 0;
     };
 
     int init(){
@@ -128,18 +90,17 @@ public:
             return -1;
         }
         
-        if (i2c_smbus_read_byte_data(file_id, who_am_i_reg) < 0){
-            printf("Gyroscope: who_am_i failed. Errno %s \n",strerror(errno));
+        if (who_am_i()){
             return -1;
         }
         
         if (i2c_smbus_write_byte_data(file_id, ctrl_reg1, ctrl_reg1_value) < 0){
-            printf("Gyroscope: ctrl_reg1 failed. Errno %s \n",strerror(errno));
+            printf("Accelleromter: ctrl_reg1 failed. Errno %s \n",strerror(errno));
             return -1;
         }
 
         if (i2c_smbus_write_byte_data(file_id, ctrl_reg4, ctrl_reg4_value) < 0){
-            printf("Gyroscope: ctrl_reg4 failed. Errno %s \n",strerror(errno));
+            printf("Accelleromter: ctrl_reg4 failed. Errno %s \n",strerror(errno));
             return -1;
         }
         return 0;
@@ -156,3 +117,4 @@ public:
 
     data_t accelerations = {0, 0, 0};
 };
+#endif

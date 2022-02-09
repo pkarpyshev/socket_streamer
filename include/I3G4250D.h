@@ -11,61 +11,9 @@ extern "C"{
     #include <stdint.h>
 }
 
-// 
-
-// #define STATUS_REG 0x27
-
-// #define OUT_XL 0x28
-// #define OUT_XH 0x29
-// #define OUT_YL 0x2A
-// #define OUT_YH 0x2B
-// #define OUT_ZL 0x2C
-// #define OUT_ZH 0x2D
-
-// struct I3G4250D_gyroscope {
-//     int16_t x;
-//     int16_t y;
-//     int16_t z;
-// };
-
-
 // static const float scale2 = 245.0f / 2048;
 
-// uint8_t xyz_available_gyro(uint8_t status_reg){
-//     return (status_reg & (1 << 3)) >> 3;
-// }
-
-// static inline int16_t read_z_axis2(int file){
-//     __s32 msb, lsb;
-//     msb = i2c_smbus_read_byte_data(file, OUT_ZH);
-//     lsb = i2c_smbus_read_byte_data(file, OUT_ZL);
-//     return (msb << 8) | (lsb);
-// }
-
-// static inline int16_t read_x_axis2(int file){
-//     __s32 msb, lsb;
-//     msb = i2c_smbus_read_byte_data(file, OUT_XH);
-//     lsb = i2c_smbus_read_byte_data(file, OUT_XL);
-//     return (msb << 8) | (lsb);
-// }
-
-// static inline int16_t read_y_axis2(int file){
-//     __s32 msb, lsb;    
-//     msb = i2c_smbus_read_byte_data(file, OUT_YH);
-//     lsb = i2c_smbus_read_byte_data(file, OUT_YL);
-//     return (msb << 8) | (lsb);
-// }
-
-// I3G4250D_gyroscope read_xyz_gyro(int file){
-//     I3G4250D_gyroscope res;
-//     res.x = (read_x_axis2(file) );
-//     res.y = (read_y_axis2(file) );
-//     res.z = (read_z_axis2(file) );
-//     return res;
-// }
-
-class I3G4250D
-{
+class I3G4250D {
 private:
     const int address = 0x68;
     const int file_id;
@@ -89,6 +37,31 @@ private:
         big_endian_selection | full_sclae_selection | 
         self_test_enable |spi_mode_selection;
 
+    const uint8_t status_reg = 0x27;
+    const uint8_t out_XL = 0x28;
+    const uint8_t out_XH = 0x29;
+    const uint8_t out_YL = 0x2A;
+    const uint8_t out_YH = 0x2B;
+    const uint8_t out_ZL = 0x2C;
+    const uint8_t out_ZH = 0x2D;
+
+    struct data_t {
+        int16_t x;
+        int16_t y;
+        int16_t z;
+    };
+
+    inline int16_t read_axis(const uint8_t msb_reg, const uint8_t lsb_reg) const {
+        __s32 msb, lsb;
+        msb = i2c_smbus_read_byte_data(file_id, msb_reg);
+        lsb = i2c_smbus_read_byte_data(file_id, lsb_reg);
+        return (msb << 8) | (lsb);
+    };
+
+    inline int get_data_status(){
+        return (i2c_smbus_read_byte_data(file_id, status_reg) & (1 << 3) >> 3);
+    };
+
 public:
     I3G4250D(int file): file_id(file) {
 
@@ -107,8 +80,12 @@ public:
         return 0;
     };
 
-    uint8_t who_am_i(){
-        return i2c_smbus_read_byte_data(file_id, who_am_i_reg);
+    int who_am_i(){
+        if(i2c_smbus_read_byte_data(file_id, who_am_i_reg) < 0){
+            printf("Accelleromter: who_am_i failed. Errno %s \n",strerror(errno));
+            return -1;
+        }
+        return 0;
     }
 
     int init(){
@@ -116,8 +93,7 @@ public:
             return -1;
         }
         
-        if (i2c_smbus_read_byte_data(file_id, who_am_i_reg) < 0){
-            printf("Gyroscope: who_am_i failed. Errno %s \n",strerror(errno));
+        if (who_am_i()){
             return -1;
         }
         
@@ -132,6 +108,17 @@ public:
         }
         return 0;
     };
+
+    int16_t read_xyz(){
+        if (get_data_status()){
+            accelerations.x = read_axis(out_XH, out_XL);
+            accelerations.y = read_axis(out_YH, out_YL);
+            accelerations.z = read_axis(out_ZH, out_ZL);
+        }
+        return 0;
+    };
+    
+    data_t accelerations = {0, 0, 0};
 };
 
 #endif
