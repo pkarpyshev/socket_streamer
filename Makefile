@@ -8,7 +8,7 @@ server:
 	cd ../.. && catkin_make --only-pkg-with-deps socket_streamer
 
 imu:
-	cd ../.. && catkin_make --only-pkg-with-deps socket_streamer --make-args -j2
+	cd ../.. && catkin_make --only-pkg-with-deps socket_streamer --make-args -j2 --cmake-args -O3
 
 all:
 	make client
