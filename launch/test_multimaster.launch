@@ -1,7 +1,8 @@
 <launch>
 <!-- 10.16.112.71 - Lab PC -->
+    <arg name="interface" default="" />
     <node pkg="fkie_master_discovery" type="master_discovery" name="master_discovery">
-        <param name="interface" value="10.16.112.71"/>
+        <param name="interface" value="$(arg interface)"/>
     </node>
 
     <node pkg="fkie_master_sync" type="master_sync" name="master_sync" respawn="true"/>
