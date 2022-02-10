@@ -14,10 +14,8 @@ const int buf_size = CAM_HEIGHT*CAM_WIDTH;
 int main(int argc, char *argv[]){
     ros::init(argc, argv, "camera_node");
     ros::NodeHandle nh;
-    // image_transport::ImageTransport it(nh);
     ros::Rate loop_rate(20);
 
-    // image_transport::Publisher pub = it.advertise("cam0/image_raw", 1);
     ros::Publisher pub = nh.advertise<sensor_msgs::Image>("cam0/image_raw", 1);
 
     sensor_msgs::Image msg;
@@ -45,11 +43,18 @@ int main(int argc, char *argv[]){
 
     cv_bridge::CvImage cv_image;
     cv_image.encoding = msg.encoding;
-    cv::namedWindow("image_raw");
+
+    camera >> frame;
+    cv::cvtColor(frame, frame_gray, cv::COLOR_BGR2GRAY);
+    cv::Point2f image_center(frame_gray.cols/2.0, frame_gray.rows/2.0);
+    cv::Mat rotation = cv::getRotationMatrix2D(image_center, 180.0, 1.0);
 
     while (nh.ok()){
         camera >> frame;
         cv::cvtColor(frame, frame_gray, cv::COLOR_BGR2GRAY);
+
+        cv::warpAffine(frame_gray, frame_gray, rotation, cv::Size(frame_gray.cols, frame_gray.rows));
+
         // msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", frame_gray).toImageMsg();
         cv_image.image = frame_gray;
         cv_image.toImageMsg(msg);
@@ -57,7 +62,6 @@ int main(int argc, char *argv[]){
         msg.header.frame_id = "cam0";
         msg.header.stamp = ros::Time::now();
         
-        cv::imshow("image_raw", frame_gray);
         pub.publish(msg);
         ros::spinOnce();
         loop_rate.sleep();
