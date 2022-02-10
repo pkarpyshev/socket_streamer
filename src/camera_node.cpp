@@ -45,6 +45,8 @@ int main(int argc, char *argv[]){
 
     cv_bridge::CvImage cv_image;
     cv_image.encoding = msg.encoding;
+    cv::namedWindow("image_raw");
+
     while (nh.ok()){
         camera >> frame;
         cv::cvtColor(frame, frame_gray, cv::COLOR_BGR2GRAY);
