@@ -5,11 +5,13 @@
     <!-- Launch imu node -->
     <node pkg="socket_streamer" type="imu_node" name="imu_node" output="screen" />
 
-    <!-- start record -->
+    <!-- start record node-->
     <arg name="file_name" default="seq2" />
+    <arg name="rec_duration" default="100" />
+
     <node pkg="rosbag" type="record" name="recorder" output="screen" 
         args=" /cam0/image_raw /imu0
-        -O $(dirname)/$(arg file_name).bag --duration=120" 
+        -O $(dirname)/$(arg file_name).bag --duration=$(arg rec_duration)" 
     />
     
 </launch>

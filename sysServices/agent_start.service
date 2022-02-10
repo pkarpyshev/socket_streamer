@@ -1,0 +1,8 @@
+[Unit]
+Description=<roslaunch socket streamer agent_run.launch>
+
+[Service]
+ExecStart=/bin/bash -c "roslaunch socket_streamer agent_run.launch"
+
+[Install]
+WantedBy=multi-user.target

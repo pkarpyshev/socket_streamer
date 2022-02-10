@@ -55,6 +55,7 @@ int main(int argc, char *argv[]){
         msg.header.frame_id = "cam0";
         msg.header.stamp = ros::Time::now();
         
+        cv::imshow("image_raw", frame_gray);
         pub.publish(msg);
         ros::spinOnce();
         loop_rate.sleep();
