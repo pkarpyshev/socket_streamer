@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
     ros::init(argc, argv, "camera_node");
     ros::NodeHandle nh;
     ros::Publisher pub = nh.advertise<sensor_msgs::Image>("cam0/image_raw", 1);
-    
+    ros::Rate loop_rate(30);
     sensor_msgs::Image msg;
     msg.height = CAM_HEIGHT;
     msg.width = CAM_WIDTH;
@@ -52,8 +52,6 @@ int main(int argc, char *argv[]){
 
     cv_bridge::CvImage cv_image;
     cv_image.encoding = msg.encoding;
-
-
 
     while (nh.ok()){
         // Read image
@@ -69,7 +67,8 @@ int main(int argc, char *argv[]){
         msg.header.stamp = ros::Time::now();
         
         pub.publish(msg);
-        ros::spinOnce();
+        // ros::spinOnce();
+        loop_rate.sleep();
     }
     return 0;
 }
