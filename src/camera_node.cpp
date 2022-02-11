@@ -26,12 +26,13 @@ int main(int argc, char *argv[]){
     msg.step = CAM_WIDTH;
 
     cv::VideoCapture camera(cv::CAP_V4L2);
-    camera.set(cv::CAP_PROP_FRAME_WIDTH,  CAM_WIDTH);
-    camera.set(cv::CAP_PROP_FRAME_HEIGHT, CAM_HEIGHT);
-    camera.set(cv::CAP_PROP_FPS, CAM_FPS);
-    camera.set(cv::CAP_PROP_FORMAT, CAM_FORMAT);
+    // camera.set(cv::CAP_PROP_FRAME_WIDTH,  CAM_WIDTH);
+    // camera.set(cv::CAP_PROP_FRAME_HEIGHT, CAM_HEIGHT);
+    // camera.set(cv::CAP_PROP_FPS, CAM_FPS);
+    camera.set(cv::CAP_PROP_FORMAT, CV_8UC1);
+    camera.set(cv::CAP_PROP_AUTOFOCUS, 0);
     camera.set(cv::CAP_PROP_AUTO_WB, 0);
-//    camera.set(cv::CAP_FFMPEG, 1);
+    camera.set(cv::CAP_PROP_AUTO_EXPOSURE, 0);
 
     if (!camera.isOpened()) {
         std::cerr << "ERROR: Could not open camera" << std::endl;
@@ -57,12 +58,12 @@ int main(int argc, char *argv[]){
     cv::imshow("test", frame);
 
     while (nh.ok()){
-        camera >> frame;
-	cv::imshow("test", frame);
+        camera >> frame_gray;
+        cv::imshow("test", frame_gray);
 
-	int k = cv::waitKey(30); // Wait for a keystroke in the window
+        int k = cv::waitKey(30); // Wait for a keystroke in the window
 
-/*
+    /*
         cv::cvtColor(frame, frame_gray, cv::COLOR_BGR2GRAY);
 
         cv::warpAffine(frame_gray, frame_gray, rotation, cv::Size(frame_gray.cols, frame_gray.rows));
