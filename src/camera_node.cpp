@@ -26,9 +26,9 @@ int main(int argc, char *argv[]){
     msg.step = CAM_WIDTH;
 
     cv::VideoCapture camera(cv::CAP_V4L2);
-    // camera.set(cv::CAP_PROP_FRAME_WIDTH,  CAM_WIDTH);
-    // camera.set(cv::CAP_PROP_FRAME_HEIGHT, CAM_HEIGHT);
-    // camera.set(cv::CAP_PROP_FPS, CAM_FPS);
+    camera.set(cv::CAP_PROP_FRAME_WIDTH,  CAM_WIDTH);
+    camera.set(cv::CAP_PROP_FRAME_HEIGHT, CAM_HEIGHT);
+    camera.set(cv::CAP_PROP_FPS, CAM_FPS);
     // camera.set(cv::CAP_PROP_AUTOFOCUS, 0);
     // camera.set(cv::CAP_PROP_AUTO_WB, 0);
     // camera.set(cv::CAP_PROP_AUTO_EXPOSURE, 0);
