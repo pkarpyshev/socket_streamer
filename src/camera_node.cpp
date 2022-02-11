@@ -26,18 +26,24 @@ int main(int argc, char *argv[]){
     msg.step = CAM_WIDTH;
 
     cv::VideoCapture camera(cv::CAP_V4L2);
-    camera.set(cv::CAP_PROP_FRAME_WIDTH,  CAM_WIDTH);
-    camera.set(cv::CAP_PROP_FRAME_HEIGHT, CAM_HEIGHT);
-    camera.set(cv::CAP_PROP_FPS, CAM_FPS);
-    // camera.set(cv::CAP_PROP_AUTOFOCUS, 0);
-    // camera.set(cv::CAP_PROP_AUTO_WB, 0);
-    // camera.set(cv::CAP_PROP_AUTO_EXPOSURE, 0);
-    std::cout << "CAP_PROP_FRAME_WIDTH:"    << camera.get(cv::CAP_PROP_FRAME_WIDTH) << std::endl;
-    std::cout << "CAP_PROP_FRAME_HEIGHT:"   << camera.get(cv::CAP_PROP_FRAME_HEIGHT) << std::endl;
-    std::cout << "CAP_PROP_FPS:"            << camera.get(cv::CAP_PROP_FPS) << std::endl;
+    std::cout << camera.set(cv::CAP_PROP_FRAME_WIDTH,  CAM_WIDTH) << ": ";
+    std::cout << "CAP_PROP_FRAME_WIDTH:" << camera.get(cv::CAP_PROP_FRAME_WIDTH) << std::endl;
+
+    std::cout << camera.set(cv::CAP_PROP_FRAME_HEIGHT, CAM_HEIGHT) << ": ";
+    std::cout << "CAP_PROP_FRAME_HEIGHT:" << camera.get(cv::CAP_PROP_FRAME_HEIGHT) << std::endl;
+    
+    std::cout << camera.set(cv::CAP_PROP_FPS, CAM_FPS) << ": ";
+    std::cout << "CAP_PROP_FPS:" << camera.get(cv::CAP_PROP_FPS) << std::endl;
+    
+    std::cout << camera.set(cv::CAP_PROP_AUTOFOCUS, 0) << ": ";
     std::cout << "CAP_PROP_AUTOFOCUS:" << camera.get(cv::CAP_PROP_AUTOFOCUS) << std::endl;
+    
+    std::cout << camera.set(cv::CAP_PROP_AUTO_WB, 0) << ": ";
     std::cout << "CAP_PROP_AUTO_WB:" << camera.get(cv::CAP_PROP_AUTO_WB) << std::endl;
-    std::cout << "CAP_PROP_AUTO_EXPOSURE:" << camera.get(cv::CAP_PROP_AUTO_EXPOSURE) << std::endl;
+    
+    
+    
+    
     // std::cout << "CAP_PROP_FRAME_WIDTH:" << camera.get(cv::CAP_PROP_FRAME_WIDTH) << std::endl;
     // std::cout << "CAP_PROP_FRAME_WIDTH:" << camera.get(cv::CAP_PROP_FRAME_WIDTH) << std::endl;
     // std::cout << "CAP_PROP_FRAME_WIDTH:" << camera.get(cv::CAP_PROP_FRAME_WIDTH) << std::endl;
