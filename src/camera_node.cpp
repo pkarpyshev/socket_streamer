@@ -28,6 +28,10 @@ int main(int argc, char *argv[]){
     cv::VideoCapture camera(0);
     camera.set(cv::CAP_PROP_FRAME_WIDTH,  CAM_WIDTH);
     camera.set(cv::CAP_PROP_FRAME_HEIGHT, CAM_HEIGHT);
+    camera.set(cv::CAP_PROP_FPS, CAM_FPS);
+    camera.set(cv::CAP_PROP_FORMAT, CAM_FORMAT);
+    camera.set(cv::CAP_PROP_AUTO_WB, 0);
+    camera.set(cv::CAP_FFMPEG, 1);
 
     if (!camera.isOpened()) {
         std::cerr << "ERROR: Could not open camera" << std::endl;
