@@ -25,13 +25,13 @@ int main(int argc, char *argv[]){
     msg.is_bigendian = 0;
     msg.step = CAM_WIDTH;
 
-    cv::VideoCapture camera(0);
+    cv::VideoCapture camera(cv::CAP_V4L2);
     camera.set(cv::CAP_PROP_FRAME_WIDTH,  CAM_WIDTH);
     camera.set(cv::CAP_PROP_FRAME_HEIGHT, CAM_HEIGHT);
     camera.set(cv::CAP_PROP_FPS, CAM_FPS);
     camera.set(cv::CAP_PROP_FORMAT, CAM_FORMAT);
     camera.set(cv::CAP_PROP_AUTO_WB, 0);
-    camera.set(cv::CAP_FFMPEG, 1);
+//    camera.set(cv::CAP_FFMPEG, 1);
 
     if (!camera.isOpened()) {
         std::cerr << "ERROR: Could not open camera" << std::endl;
@@ -48,13 +48,21 @@ int main(int argc, char *argv[]){
     cv_bridge::CvImage cv_image;
     cv_image.encoding = msg.encoding;
 
+    cv::namedWindow("test", cv::WINDOW_AUTOSIZE);
+
     camera >> frame;
     cv::cvtColor(frame, frame_gray, cv::COLOR_BGR2GRAY);
     cv::Point2f image_center(frame_gray.cols/2.0, frame_gray.rows/2.0);
     cv::Mat rotation = cv::getRotationMatrix2D(image_center, 180.0, 1.0);
+    cv::imshow("test", frame);
 
     while (nh.ok()){
         camera >> frame;
+	cv::imshow("test", frame);
+
+	int k = cv::waitKey(30); // Wait for a keystroke in the window
+
+/*
         cv::cvtColor(frame, frame_gray, cv::COLOR_BGR2GRAY);
 
         cv::warpAffine(frame_gray, frame_gray, rotation, cv::Size(frame_gray.cols, frame_gray.rows));
@@ -67,6 +75,7 @@ int main(int argc, char *argv[]){
         msg.header.stamp = ros::Time::now();
         
         pub.publish(msg);
+*/
         ros::spinOnce();
         loop_rate.sleep();
     }
