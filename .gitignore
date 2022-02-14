@@ -1,5 +1,6 @@
 *.o
 *.cmake
+*tar.gz
 
 .vscode
 build
