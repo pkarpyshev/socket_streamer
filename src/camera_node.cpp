@@ -19,7 +19,8 @@ int main(int argc, char *argv[]){
         exit(1);
     }
 
-    // Setup camera prarameters
+    std::cout << "Setup camera prarameters:"  <<
+        " (0)1 - (not)supported : Flag status." << std::endl;
     std::cout << camera.set(cv::CAP_PROP_FRAME_WIDTH,  CAM_WIDTH) << ": ";
     std::cout << "CAP_PROP_FRAME_WIDTH:" << camera.get(cv::CAP_PROP_FRAME_WIDTH) << std::endl;
 
@@ -29,7 +30,10 @@ int main(int argc, char *argv[]){
     std::cout << camera.set(cv::CAP_PROP_FPS, CAM_FPS) << ": ";
     std::cout << "CAP_PROP_FPS:" << camera.get(cv::CAP_PROP_FPS) << std::endl;
 
-    std::cout << camera.set(cv::CAP_PROP_ZOOM, 0) << ": ";
+    std::cout << camera.set(cv::CAP_PROP_MODE, 7) << ": ";
+    std::cout << "CAP_PROP_MODE:" << camera.get(cv::CAP_PROP_MODE) << std::endl;
+
+    std::cout << camera.set(cv::CAP_PROP_ZOOM, 1.0) << ": ";
     std::cout << "CAP_PROP_ZOOM:" << camera.get(cv::CAP_PROP_ZOOM) << std::endl;
 
     // Define  variables for opencv
