@@ -30,11 +30,8 @@ int main(int argc, char *argv[]){
     std::cout << camera.set(cv::CAP_PROP_FPS, CAM_FPS) << ": ";
     std::cout << "CAP_PROP_FPS:" << camera.get(cv::CAP_PROP_FPS) << std::endl;
 
-    std::cout << camera.set(cv::CAP_PROP_MODE, 7) << ": ";
+    std::cout << camera.set(cv::CAP_PROP_MODE, CAM_MODE) << ": ";
     std::cout << "CAP_PROP_MODE:" << camera.get(cv::CAP_PROP_MODE) << std::endl;
-
-    std::cout << camera.set(cv::CAP_PROP_ZOOM, 1.0) << ": ";
-    std::cout << "CAP_PROP_ZOOM:" << camera.get(cv::CAP_PROP_ZOOM) << std::endl;
 
     // Define  variables for opencv
     cv::Mat frame_rgb;
