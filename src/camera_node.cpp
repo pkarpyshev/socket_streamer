@@ -29,6 +29,9 @@ int main(int argc, char *argv[]){
     std::cout << camera.set(cv::CAP_PROP_FPS, CAM_FPS) << ": ";
     std::cout << "CAP_PROP_FPS:" << camera.get(cv::CAP_PROP_FPS) << std::endl;
 
+    std::cout << camera.set(cv::CAP_PROP_ZOOM, 0) << ": ";
+    std::cout << "CAP_PROP_ZOOM:" << camera.get(cv::CAP_PROP_ZOOM) << std::endl;
+
     // Define  variables for opencv
     cv::Mat frame_rgb;
     cv::Size frame_size(CAM_WIDTH, CAM_HEIGHT);
