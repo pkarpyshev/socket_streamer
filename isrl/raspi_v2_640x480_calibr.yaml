@@ -7,11 +7,16 @@ camera_matrix:
   data: [1294.86732,    0.     ,  366.42463,
             0.     , 1306.37142,  253.22582,
             0.     ,    0.     ,    1.     ]
+
+# fx   0  cx
+#  0  fy  cy
+#  0   0   1
 distortion_model: plumb_bob
 distortion_coefficients:
   rows: 1
   cols: 5
   data: [-0.250697, 7.425843, 0.002973, 0.010762, 0.000000]
+# k1, k2, t1, t2, k3
 rectification_matrix:
   rows: 3
   cols: 3
