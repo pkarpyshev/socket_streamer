@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
     ros::init(argc, argv, "camera_node");
     ros::NodeHandle nh;
 
-    ros::Publisher pub = nh.advertise<sensor_msgs::Image>("cam0/image_raw", 0);
+    ros::Publisher pub = nh.advertise<sensor_msgs::Image>("cam0/image_raw", 10);
     sensor_msgs::Image msg;
     msg.height = MSG_HEIGHT;
     msg.width = MSG_WIDTH;

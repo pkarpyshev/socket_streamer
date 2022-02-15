@@ -46,7 +46,7 @@ int main(int argc, char *argv[]){
     ros::init(argc, argv, "imu_node");
     ros::NodeHandle nh;
 
-    ros::Publisher imu_pub = nh.advertise<sensor_msgs::Imu>("imu0", 0);
+    ros::Publisher imu_pub = nh.advertise<sensor_msgs::Imu>("imu0", 10);
     static sensor_msgs::Imu imu_msg;
     imu_msg.header.frame_id = "imu0";
     imu_msg.orientation_covariance = {99999.9, 0.0, 0.0, 0.0, 99999.9, 0.0, 0.0, 0.0, 99999.9};
