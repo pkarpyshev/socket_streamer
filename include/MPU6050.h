@@ -69,9 +69,9 @@ private:
     const uint8_t gyro_ZH = 0x47;
     
     struct data_t {
-        float x;
-        float y;
-        float z;
+        int x;
+        int y;
+        int z;
     };
 
     inline int16_t read_axis(const uint8_t msb_reg, const uint8_t lsb_reg) const {
@@ -146,13 +146,13 @@ public:
 
     int16_t read_xyz(){
         // if (get_data_status()){
-            angular_velocity.x = read_axis(gyro_XH, gyro_XL)*1.0;// * resolution * scale;
-            angular_velocity.y = read_axis(gyro_YH, gyro_YL)*1.0;// * resolution * scale;
-            angular_velocity.z = read_axis(gyro_ZH, gyro_ZL)*1.0;// * resolution * scale;
+            angular_velocity.x = read_axis(gyro_XH, gyro_XL);// * resolution * scale;
+            angular_velocity.y = read_axis(gyro_YH, gyro_YL);// * resolution * scale;
+            angular_velocity.z = read_axis(gyro_ZH, gyro_ZL);// * resolution * scale;
 
-            linear_accel.x = read_axis(accel_XH, accel_XL)*1.0;// * resolution * scale;
-            linear_accel.y = read_axis(accel_YH, accel_YL)*1.0;// * resolution * scale;
-            linear_accel.z = read_axis(accel_ZH, accel_ZL)*1.0;// * resolution * scale;
+            linear_accel.x = read_axis(accel_XH, accel_XL);// * resolution * scale;
+            linear_accel.y = read_axis(accel_YH, accel_YL);// * resolution * scale;
+            linear_accel.z = read_axis(accel_ZH, accel_ZL);// * resolution * scale;
         // }
         return 0;
     };
