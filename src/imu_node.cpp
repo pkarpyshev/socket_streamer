@@ -58,9 +58,9 @@ int main(int argc, char *argv[]){
         // auto start = std::chrono::steady_clock::now();
         if (accelerometer.connect() == 0){
             accelerometer.read_xyz();
-            imu_msg.linear_acceleration.x = accelerometer.accelerations.x;
-            imu_msg.linear_acceleration.y = accelerometer.accelerations.y;
-            imu_msg.linear_acceleration.z = accelerometer.accelerations.z;
+            imu_msg.linear_acceleration.x =  accelerometer.accelerations.y;
+            imu_msg.linear_acceleration.y =  accelerometer.accelerations.x;
+            imu_msg.linear_acceleration.z = -accelerometer.accelerations.z;
         } else {
             std::cout << "Acceleromter: connect error" << std::endl;
         }
