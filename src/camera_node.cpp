@@ -43,7 +43,7 @@ int main(int argc, char *argv[]){
     cv::Mat frame_msg(cv::Size(MSG_WIDTH, MSG_HEIGHT), CV_8UC1);
     
     // Need to rotate image
-    cv::Point2f image_center(frame_gray.cols/2.0, frame_gray.rows/2.0);
+    cv::Point2f image_center(frame_msg.cols/2.0, frame_msg.rows/2.0);
     cv::Mat rotation = cv::getRotationMatrix2D(image_center, 180.0, 1.0);
 
     // Initializw ROS
