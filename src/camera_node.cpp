@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
         msg.header.stamp = ros::Time::now();
         
         pub.publish(msg);
-        loop_rate.sleep();
+        publish_rate.sleep();
     }
     return 0;
 }
