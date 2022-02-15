@@ -17,8 +17,7 @@ extern "C"{
 #define ACCEL_CONFIG_REG    0x1C
 #define I2C_MST_CTRL_REG    0x24
 #define FIFO_EN_REG         0x23
-
-
+#define PWR_MGMT_1          0x6B
 
 class MPU6050 {
 private:
@@ -134,6 +133,11 @@ public:
         }
 
         if (i2c_smbus_write_byte_data(file_id, FIFO_EN_REG, fifo_en) < 0){
+            printf("SENSOR: fifo_en failed. Errno %s \n",strerror(errno));
+            return -1;
+        }
+
+        if (i2c_smbus_write_byte_data(file_id, PWR_MGMT_1, 0) < 0){
             printf("SENSOR: fifo_en failed. Errno %s \n",strerror(errno));
             return -1;
         }
