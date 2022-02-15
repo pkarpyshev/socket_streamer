@@ -9,6 +9,8 @@ extern "C"{
     #include "I3G4250D.h"
 }
 
+static const double ros_freq = 110;
+
 uint8_t select_device(int file, int address){
     if (ioctl(file, I2C_SLAVE, address) < 0){
         return -1;
@@ -45,8 +47,6 @@ int main(int argc, char *argv[]){
     ros::NodeHandle nh;
 
     ros::Publisher imu_pub = nh.advertise<sensor_msgs::Imu>("imu0", 10);
-    ros::Rate publish_rate(200);
-
     static sensor_msgs::Imu imu_msg;
     imu_msg.header.frame_id = "imu0";
     imu_msg.orientation_covariance = {99999.9, 0.0, 0.0, 0.0, 99999.9, 0.0, 0.0, 0.0, 99999.9};
@@ -54,8 +54,8 @@ int main(int argc, char *argv[]){
     imu_msg.angular_velocity_covariance = {99999.9, 0.0, 0.0, 0.0, 99999.9, 0.0, 0.0, 0.0, 99999.9};
     imu_msg.orientation.w = 1.0;
 
+    ros::Rate publish_rate(ros_freq);
     while(nh.ok()){
-        // auto start = std::chrono::steady_clock::now();
         if (accelerometer.connect() == 0){
             accelerometer.read_xyz();
             imu_msg.linear_acceleration.x = accelerometer.accelerations.x;
@@ -64,7 +64,6 @@ int main(int argc, char *argv[]){
         } else {
             std::cout << "Acceleromter: connect error" << std::endl;
         }
-        // auto accel_duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
 
         if (gyroscope.connect() == 0){
             gyroscope.read_xyz();
@@ -76,11 +75,8 @@ int main(int argc, char *argv[]){
         }
         
         imu_msg.header.stamp = ros::Time::now();
-        // auto gyro_duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
 
         imu_pub.publish(imu_msg);
-        // auto common_duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
-        // std::cout << accel_duration << "; " << gyro_duration << "; " << common_duration <<std::endl;
         publish_rate.sleep();
     }
     return 0;

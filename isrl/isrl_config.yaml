@@ -11,15 +11,15 @@ camera_name: camera
 image_width: 640
 image_height: 480
 distortion_parameters:
-   k1: -2.507e-01
-   k2: 7.425843
-   p1: 0.2973e-02
-   p2: 1.0762e-02
+   k1: 0.168761
+   k2: -0.278898
+   p1: -0.001228
+   p2: -0.000431
 projection_parameters:
-   fx: 1345.70862
-   fy: 1367.26208
-   cx: 363.63615
-   cy: 252.46234
+   fx: 668.05511
+   fy: 895.74829
+   cx: 322.28687
+   cy: 230.91717
 
 # Extrinsic parameter between IMU and Camera.
 estimate_extrinsic: 0   # 0  Have an accurate extrinsic parameters. We will trust the following imu^R_cam, imu^T_cam, don't change it.
@@ -56,9 +56,9 @@ max_num_iterations: 8   # max solver itrations, to guarantee real time
 keyframe_parallax: 10.0 # keyframe selection threshold (pixel)
 
 #imu parameters       The more accurate parameters you provide, the better performance
-acc_n: 0.2          # accelerometer measurement noise standard deviation. #0.2   0.04
+acc_n: 0.5          # accelerometer measurement noise standard deviation. #0.2   0.04
 gyr_n: 0.05         # gyroscope measurement noise standard deviation.     #0.05  0.004
-acc_w: 0.02         # accelerometer bias random work noise standard deviation.  #0.02
+acc_w: 0.1         # accelerometer bias random work noise standard deviation.  #0.02
 gyr_w: 0.25     # gyroscope bias random work noise standard deviation.     #4.0e-5
 g_norm: 9.81007     # gravity magnitude
 
