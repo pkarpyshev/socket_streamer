@@ -67,11 +67,11 @@ int main(int argc, char *argv[]){
         // Convert to gray scale
         cv::cvtColor(frame_rgb, frame_gray, cv::COLOR_RGB2GRAY);
         // Scale image to MSG_WIDTHxMSG_HEIGHT
-        cv::resize(frame_gray, frame_msg, frame_msg.size(), scale_width, scale_height);
+        cv::resize(frame_gray, frame_msg, frame_msg.size(), 0, 0);
         // Rotate image
         cv::warpAffine(frame_msg, frame_msg, rotation, frame_msg.size());
         // Make message
-        cv_image.image = frame_gray;
+        cv_image.image = frame_msg;
         cv_image.toImageMsg(msg);
         msg.header.frame_id = "cam0";
         msg.header.stamp = ros::Time::now();

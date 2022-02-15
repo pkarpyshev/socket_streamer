@@ -8,5 +8,5 @@
 #define MSG_WIDTH   640
 #define MSG_HEIGHT  480
 
-const float scale_width  = CAM_WIDTH/MSG_WIDTH;
-const float scale_height = CAM_HEIGHT/MSG_HEIGHT;
+const float scale_width  = (float)MSG_WIDTH/(float)CAM_WIDTH;
+const float scale_height = (float)MSG_HEIGHT/(float)CAM_HEIGHT;
