@@ -33,10 +33,14 @@ int main(int argc, char *argv[]){
     std::cout << camera.set(cv::CAP_PROP_MODE, CAM_MODE) << ": ";
     std::cout << "CAP_PROP_MODE:" << camera.get(cv::CAP_PROP_MODE) << std::endl;
 
+    std::cout << "Scales: " << scale_width << "x" << scale_height << std::endl;
+
     // Define  variables for opencv
     cv::Mat frame_rgb;
-    cv::Size frame_size(CAM_WIDTH, CAM_HEIGHT);
-    cv::Mat frame_gray(frame_size, CV_8UC1);
+    // cv::Size frame_size(CAM_WIDTH, CAM_HEIGHT);
+    cv::Mat frame_gray(cv::Size(CAM_WIDTH, CAM_HEIGHT), CV_8UC1);
+    // cv::Size frame_size(CAM_WIDTH, CAM_HEIGHT);
+    cv::Mat frame_msg(cv::Size(MSG_WIDTH, MSG_HEIGHT), CV_8UC1);
     
     // Need to rotate image
     cv::Point2f image_center(frame_gray.cols/2.0, frame_gray.rows/2.0);
@@ -48,11 +52,11 @@ int main(int argc, char *argv[]){
     ros::Publisher pub = nh.advertise<sensor_msgs::Image>("cam0/image_raw", 1);
     ros::Rate loop_rate(30);
     sensor_msgs::Image msg;
-    msg.height = CAM_HEIGHT;
-    msg.width = CAM_WIDTH;
+    msg.height = MSG_HEIGHT;
+    msg.width = MSG_WIDTH;
     msg.encoding = "mono8";
     msg.is_bigendian = 0;
-    msg.step = CAM_WIDTH;
+    msg.step = MSG_WIDTH;
 
     cv_bridge::CvImage cv_image;
     cv_image.encoding = msg.encoding;
@@ -62,8 +66,10 @@ int main(int argc, char *argv[]){
         camera >> frame_rgb;
         // Convert to gray scale
         cv::cvtColor(frame_rgb, frame_gray, cv::COLOR_RGB2GRAY);
+        // Scale image to MSG_WIDTHxMSG_HEIGHT
+        cv::resize(frame_gray, frame_msg, frame_msg.size(), scale_width, scale_height);
         // Rotate image
-        cv::warpAffine(frame_gray, frame_gray, rotation, cv::Size(frame_gray.cols, frame_gray.rows));
+        cv::warpAffine(frame_msg, frame_msg, rotation, frame_msg.size());
         // Make message
         cv_image.image = frame_gray;
         cv_image.toImageMsg(msg);
