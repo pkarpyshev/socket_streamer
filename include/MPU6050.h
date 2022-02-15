@@ -76,8 +76,8 @@ private:
 
     inline int16_t read_axis(const uint8_t msb_reg, const uint8_t lsb_reg) const {
         __s32 msb, lsb;
-        // msb = i2c_smbus_read_byte_data(file_id, msb_reg);
-        // lsb = i2c_smbus_read_byte_data(file_id, lsb_reg);
+        msb = i2c_smbus_read_byte_data(file_id, msb_reg);
+        lsb = i2c_smbus_read_byte_data(file_id, lsb_reg);
         return (msb << 8) | (lsb);
     };
 
@@ -146,13 +146,13 @@ public:
 
     int16_t read_xyz(){
         // if (get_data_status()){
-            angular_velocity.x = (read_axis(gyro_XH, gyro_XL) >> 4)*1.0;// * resolution * scale;
-            angular_velocity.y = (read_axis(gyro_YH, gyro_YL) >> 4)*1.0;// * resolution * scale;
-            angular_velocity.z = (read_axis(gyro_ZH, gyro_ZL) >> 4)*1.0;// * resolution * scale;
+            angular_velocity.x = read_axis(gyro_XH, gyro_XL)*1.0;// * resolution * scale;
+            angular_velocity.y = read_axis(gyro_YH, gyro_YL)*1.0;// * resolution * scale;
+            angular_velocity.z = read_axis(gyro_ZH, gyro_ZL)*1.0;// * resolution * scale;
 
-            linear_accel.x = (read_axis(accel_XH, accel_XL) >> 4)*1.0;// * resolution * scale;
-            linear_accel.y = (read_axis(accel_YH, accel_YL) >> 4)*1.0;// * resolution * scale;
-            linear_accel.z = (read_axis(accel_ZH, accel_ZL) >> 4)*1.0;// * resolution * scale;
+            linear_accel.x = read_axis(accel_XH, accel_XL)*1.0;// * resolution * scale;
+            linear_accel.y = read_axis(accel_YH, accel_YL)*1.0;// * resolution * scale;
+            linear_accel.z = read_axis(accel_ZH, accel_ZL)*1.0;// * resolution * scale;
         // }
         return 0;
     };
