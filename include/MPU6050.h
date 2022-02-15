@@ -48,7 +48,7 @@ private:
     //     self_test_sign | self_test_enable |spi_mode_selection;
 
     const float accel_scale = 9.81f;              // from g to m/s^2
-    const float accel_resolution = 4.0f / 65536;   // from bits to g
+    const float accel_resolution = 2.0f / 32768;   // from bits to g
     // const uint8_t status_reg = 0x27;
     const uint8_t accel_XL = 0x3C;
     const uint8_t accel_XH = 0x3B;
@@ -57,8 +57,8 @@ private:
     const uint8_t accel_ZL = 0x40;
     const uint8_t accel_ZH = 0x3F;
 
-    const float gyro_scale = 9.81f;              // from g to m/s^2
-    const float gyro_resolution = 250.0 / 65536;   // from bits to g
+    const float gyro_scale = 3.141592f / 180.0f;    // from dps to radians per second (rps)
+    const float gyro_resolution = 250.0 / 32768;   // from bits to g
     // const uint8_t status_reg = 0x27;
     const uint8_t gyro_XL = 0x44;
     const uint8_t gyro_XH = 0x43;
@@ -68,9 +68,9 @@ private:
     const uint8_t gyro_ZH = 0x47;
     
     struct data_t {
-        int x;
-        int y;
-        int z;
+        float x;
+        float y;
+        float z;
     };
 
     inline int16_t read_axis(const uint8_t msb_reg, const uint8_t lsb_reg) const {
@@ -150,13 +150,13 @@ public:
 
     int16_t read_xyz(){
         // if (get_data_status()){
-            angular_velocity.x = read_axis(gyro_XH, gyro_XL);// * resolution * scale;
-            angular_velocity.y = read_axis(gyro_YH, gyro_YL);// * resolution * scale;
-            angular_velocity.z = read_axis(gyro_ZH, gyro_ZL);// * resolution * scale;
+            angular_velocity.x = read_axis(gyro_XH, gyro_XL) * gyro_resolution * gyro_scale;
+            angular_velocity.y = read_axis(gyro_YH, gyro_YL) * gyro_resolution * gyro_scale;
+            angular_velocity.z = read_axis(gyro_ZH, gyro_ZL) * gyro_resolution * gyro_scale;
 
-            linear_accel.x = read_axis(accel_XH, accel_XL);// * resolution * scale;
-            linear_accel.y = read_axis(accel_YH, accel_YL);// * resolution * scale;
-            linear_accel.z = read_axis(accel_ZH, accel_ZL);// * resolution * scale;
+            linear_accel.x = read_axis(accel_XH, accel_XL) * accel_resolution * accel_scale;
+            linear_accel.y = read_axis(accel_YH, accel_YL) * accel_resolution * accel_scale;
+            linear_accel.z = read_axis(accel_ZH, accel_ZL) * accel_resolution * accel_scale;
         // }
         return 0;
     };
