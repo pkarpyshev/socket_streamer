@@ -9,7 +9,7 @@ extern "C"{
     #include "I3G4250D.h"
 }
 
-static const double ros_freq = 100;
+static const double ros_freq = 110;
 
 uint8_t select_device(int file, int address){
     if (ioctl(file, I2C_SLAVE, address) < 0){
@@ -46,9 +46,7 @@ int main(int argc, char *argv[]){
     ros::init(argc, argv, "imu_node");
     ros::NodeHandle nh;
 
-    ros::Publisher imu_pub = nh.advertise<sensor_msgs::Imu>("imu0", 10);
-    ros::Rate publish_rate(ros_freq);
-
+    ros::Publisher imu_pub = nh.advertise<sensor_msgs::Imu>("imu0", 0);
     static sensor_msgs::Imu imu_msg;
     imu_msg.header.frame_id = "imu0";
     imu_msg.orientation_covariance = {99999.9, 0.0, 0.0, 0.0, 99999.9, 0.0, 0.0, 0.0, 99999.9};
@@ -56,6 +54,7 @@ int main(int argc, char *argv[]){
     imu_msg.angular_velocity_covariance = {99999.9, 0.0, 0.0, 0.0, 99999.9, 0.0, 0.0, 0.0, 99999.9};
     imu_msg.orientation.w = 1.0;
 
+    ros::Rate publish_rate(ros_freq);
     while(nh.ok()){
         if (accelerometer.connect() == 0){
             accelerometer.read_xyz();

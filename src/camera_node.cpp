@@ -10,6 +10,7 @@
 #include <cv_bridge/cv_bridge.h>
 
 const int buf_size = CAM_HEIGHT*CAM_WIDTH;
+static const double ros_freq = 11;
 
 int main(int argc, char *argv[]){
     // Open camera stream
@@ -26,7 +27,7 @@ int main(int argc, char *argv[]){
     std::cout << "Camera is opened." << std::endl;
     std::cout << "Camera resoultion:" << camera.get(cv::CAP_PROP_FRAME_WIDTH) << "x" << camera.get(cv::CAP_PROP_FRAME_HEIGHT) << std::endl;
     std::cout << "Message resolution:" << MSG_WIDTH << "x" << MSG_HEIGHT << std::endl;
-    std::cout << "FPS:" << camera.get(cv::CAP_PROP_MODE) << std::endl;
+    std::cout << "FPS:" << camera.get(cv::CAP_PROP_FPS) << std::endl;
 
     // Define  variables for opencv
     cv::Mat frame_rgb;
@@ -42,8 +43,8 @@ int main(int argc, char *argv[]){
     // Initializw ROS
     ros::init(argc, argv, "camera_node");
     ros::NodeHandle nh;
-    ros::Publisher pub = nh.advertise<sensor_msgs::Image>("cam0/image_raw", 1);
-    ros::Rate loop_rate(10);
+
+    ros::Publisher pub = nh.advertise<sensor_msgs::Image>("cam0/image_raw", 0);
     sensor_msgs::Image msg;
     msg.height = MSG_HEIGHT;
     msg.width = MSG_WIDTH;
@@ -54,6 +55,7 @@ int main(int argc, char *argv[]){
     cv_bridge::CvImage cv_image;
     cv_image.encoding = msg.encoding;
 
+    ros::Rate publish_rate(ros_freq);
     while (nh.ok()){
         // Read image
         camera >> frame_rgb;
