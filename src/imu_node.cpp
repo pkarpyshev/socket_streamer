@@ -81,6 +81,19 @@ int main(int argc, char *argv[]){
         // } else {
         //     std::cout << "Gyroscope: connect error" << std::endl;
         // }
+
+        if (imu_sensor.connect() == 0){
+            imu_sensor.read_xyz();
+            imu_msg.linear_acceleration.x = imu_sensor.linear_accel.x;
+            imu_msg.linear_acceleration.y = imu_sensor.linear_accel.y;
+            imu_msg.linear_acceleration.z = imu_sensor.linear_accel.z;
+
+            imu_msg.angular_velocity.x = imu_sensor.angular_velocity.x;
+            imu_msg.angular_velocity.y = imu_sensor.angular_velocity.y;
+            imu_msg.angular_velocity.z = imu_sensor.angular_velocity.z;
+        } else {
+            std::cout << "Imu_sensor: connect error" << std::endl;
+        }
         
         imu_msg.header.stamp = ros::Time::now();
 

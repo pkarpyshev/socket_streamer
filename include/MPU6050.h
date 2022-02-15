@@ -48,15 +48,25 @@ private:
     //     block_data_update | big_endian_selection | full_sclae_selection | 
     //     self_test_sign | self_test_enable |spi_mode_selection;
 
-    // const float scale = 9.81f;              // from g to m/s^2
-    // const float resolution = 4.0f / 2048;   // from bits to g
+    const float accel_scale = 9.81f;              // from g to m/s^2
+    const float accel_resolution = 4.0f / 65536;   // from bits to g
     // const uint8_t status_reg = 0x27;
-    // const uint8_t out_XL = 0x28;
-    // const uint8_t out_XH = 0x29;
-    // const uint8_t out_YL = 0x2A;
-    // const uint8_t out_YH = 0x2B;
-    // const uint8_t out_ZL = 0x2C;
-    // const uint8_t out_ZH = 0x2D;
+    const uint8_t accel_XL = 0x3C;
+    const uint8_t accel_XH = 0x3B;
+    const uint8_t accel_YL = 0x3E;
+    const uint8_t accel_YH = 0x3D;
+    const uint8_t accel_ZL = 0x40;
+    const uint8_t accel_ZH = 0x3F;
+
+    const float gyro_scale = 9.81f;              // from g to m/s^2
+    const float gyro_resolution = 250.0 / 65536;   // from bits to g
+    // const uint8_t status_reg = 0x27;
+    const uint8_t gyro_XL = 0x44;
+    const uint8_t gyro_XH = 0x43;
+    const uint8_t gyro_YL = 0x46;
+    const uint8_t gyro_YH = 0x45;
+    const uint8_t gyro_ZL = 0x48;
+    const uint8_t gyro_ZH = 0x47;
     
     struct data_t {
         float x;
@@ -136,13 +146,18 @@ public:
 
     int16_t read_xyz(){
         // if (get_data_status()){
-        //     accelerations.x = (read_axis(out_XH, out_XL) >> 4) * resolution * scale;
-        //     accelerations.y = (read_axis(out_YH, out_YL) >> 4) * resolution * scale;
-        //     accelerations.z = (read_axis(out_ZH, out_ZL) >> 4) * resolution * scale;
+            angular_velocity.x = (read_axis(gyro_XH, gyro_XL) >> 4)*1.0;// * resolution * scale;
+            angular_velocity.y = (read_axis(gyro_YH, gyro_YL) >> 4)*1.0;// * resolution * scale;
+            angular_velocity.z = (read_axis(gyro_ZH, gyro_ZL) >> 4)*1.0;// * resolution * scale;
+
+            linear_accel.x = (read_axis(accel_XH, accel_XL) >> 4)*1.0;// * resolution * scale;
+            linear_accel.y = (read_axis(accel_YH, accel_YL) >> 4)*1.0;// * resolution * scale;
+            linear_accel.z = (read_axis(accel_ZH, accel_ZL) >> 4)*1.0;// * resolution * scale;
         // }
         return 0;
     };
 
-    data_t accelerations = {0, 0, 0};
+    data_t linear_accel = {0, 0, 0};
+    data_t angular_velocity = {0, 0, 0};
 };
 #endif
