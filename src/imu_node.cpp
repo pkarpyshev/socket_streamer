@@ -91,8 +91,6 @@ int main(int argc, char *argv[]){
             imu_msg.angular_velocity.x = imu_sensor.angular_velocity.x;
             imu_msg.angular_velocity.y = imu_sensor.angular_velocity.y;
             imu_msg.angular_velocity.z = imu_sensor.angular_velocity.z;
-            
-            std::cout << imu_sensor.linear_accel.z << std::endl;
         } else {
             std::cout << "Imu_sensor: connect error" << std::endl;
         }
