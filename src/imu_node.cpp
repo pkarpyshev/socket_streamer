@@ -65,28 +65,6 @@ int main(int argc, char *argv[]){
             std::cout << "Acceleromter: connect error" << std::endl;
         }
 
-<<<<<<< HEAD
-        // if (gyroscope.connect() == 0){
-        //     gyroscope.read_xyz();
-        //     imu_msg.angular_velocity.x = gyroscope.velocity.x;
-        //     imu_msg.angular_velocity.y = gyroscope.velocity.y;
-        //     imu_msg.angular_velocity.z = gyroscope.velocity.z;
-        // } else {
-        //     std::cout << "Gyroscope: connect error" << std::endl;
-        // }
-
-        if (imu_sensor.connect() == 0){
-            imu_sensor.read_xyz();
-            imu_msg.linear_acceleration.x = imu_sensor.linear_accel.x;
-            imu_msg.linear_acceleration.y = imu_sensor.linear_accel.y;
-            imu_msg.linear_acceleration.z = imu_sensor.linear_accel.z;
-
-            imu_msg.angular_velocity.x = imu_sensor.angular_velocity.x;
-            imu_msg.angular_velocity.y = imu_sensor.angular_velocity.y;
-            imu_msg.angular_velocity.z = imu_sensor.angular_velocity.z;
-        } else {
-            std::cout << "Imu_sensor: connect error" << std::endl;
-=======
         if (gyroscope.connect() == 0){
             gyroscope.read_xyz();
             imu_msg.angular_velocity.x = gyroscope.velocity.x;
@@ -94,7 +72,6 @@ int main(int argc, char *argv[]){
             imu_msg.angular_velocity.z = gyroscope.velocity.z;
         } else {
             std::cout << "Gyroscope: connect error" << std::endl;
->>>>>>> parent of 40ccd85... Test MPU6050 connection
         }
         
         imu_msg.header.stamp = ros::Time::now();
