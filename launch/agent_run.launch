@@ -1,7 +1,43 @@
 <launch>
-    <!-- Launch camera node -->
-    <node pkg="socket_streamer" type="camera_node" name="camera_node" output="screen" />
+    <arg name="use_realsense" default="True" />
+
+    <group if="$(arg use_realsense)">
+        <!-- Launch realsense_ros node -->
+        <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+            <arg name="device_type"         value="d435i"/>
+            <arg name="camera"              value="cam0"/>
+            <arg name="color_fps"           value="30"/>
+            <arg name="color_width"         value="640"/>
+            <arg name="color_height"        value="480"/>
+
+            <arg name="enable_depth"        value="false"/>
+            <arg name="enable_infra1"       value="false"/>
+            <arg name="enable_infra2"       value="false"/>
+            <arg name="enable_fisheye"      value="false"/>
+            <arg name="enable_confidence"   value="false"/>
+            
+            <arg name="enable_gyro"         value="true"/>
+            <arg name="gyro_fps"            value="200"/>
+            <arg name="enable_accel"        value="true"/>
+            <arg name="accel_fps"           value="250"/>
+            <arg name="unite_imu_method"    value="copy"/>
+
+            <arg name="publish_odom_tf"     value="false"/>
+            <arg name="publish_tf"          value="false"/>
+            
+        </include>
+
+        <rosparam>
+            /cam0/stereo_module/emitter_enabled: false
+        </rosparam>
+    </group>
+
+    <group unless="$(arg use_realsense)">
+        <!-- Launch camera node -->
+        <node pkg="socket_streamer" type="camera_node" name="camera_node" output="screen" />
+        <!-- Launch imu node -->
+        <node pkg="socket_streamer" type="imu_node" name="imu_node" output="screen" />    
+    </group>
+
     
-    <!-- Launch imu node -->
-    <node pkg="socket_streamer" type="imu_node" name="imu_node" output="screen" />    
 </launch>
