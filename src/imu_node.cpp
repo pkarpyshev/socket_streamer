@@ -7,7 +7,6 @@
 extern "C"{
     #include "LIS331DLH.h"
     #include "I3G4250D.h"
-    #include "MPU6050.h"
 }
 
 static const double ros_freq = 110;
@@ -29,27 +28,20 @@ int main(int argc, char *argv[]){
         exit(1);
     }
 
-    MPU6050 imu_sensor(file);
-    // I3G4250D gyroscope(file);
-    // LIS331DLH accelerometer(file);
-    
-    if (imu_sensor.init() < 0) {
-        std::cout << "MPU6050.init() error." << std::endl;
+    I3G4250D gyroscope(file);
+    LIS331DLH accelerometer(file);
+
+    if (accelerometer.init() < 0) {
+        std::cout << "LIS331DLH.init() error." << std::endl;
     } else {
-        std::cout << "MPU6050 initialized." << std::endl;
+        std::cout << "LIS331DLH initialized." << std::endl;
     }
 
-    // if (accelerometer.init() < 0) {
-    //     std::cout << "LIS331DLH.init() error." << std::endl;
-    // } else {
-    //     std::cout << "LIS331DLH initialized." << std::endl;
-    // }
-
-    // if (gyroscope.init() < 0){
-    //     std::cout << "I3G4250D.init() error." << std::endl;
-    // } else {
-    //     std::cout << "I3G4250D initialized." << std::endl;
-    // }
+    if (gyroscope.init() < 0){
+        std::cout << "I3G4250D.init() error." << std::endl;
+    } else {
+        std::cout << "I3G4250D initialized." << std::endl;
+    }
     
     ros::init(argc, argv, "imu_node");
     ros::NodeHandle nh;
@@ -64,15 +56,16 @@ int main(int argc, char *argv[]){
 
     ros::Rate publish_rate(ros_freq);
     while(nh.ok()){
-        // if (accelerometer.connect() == 0){
-        //     accelerometer.read_xyz();
-        //     imu_msg.linear_acceleration.x = accelerometer.accelerations.x;
-        //     imu_msg.linear_acceleration.y = accelerometer.accelerations.y;
-        //     imu_msg.linear_acceleration.z = accelerometer.accelerations.z;
-        // } else {
-        //     std::cout << "Acceleromter: connect error" << std::endl;
-        // }
+        if (accelerometer.connect() == 0){
+            accelerometer.read_xyz();
+            imu_msg.linear_acceleration.x = accelerometer.accelerations.x;
+            imu_msg.linear_acceleration.y = accelerometer.accelerations.y;
+            imu_msg.linear_acceleration.z = accelerometer.accelerations.z;
+        } else {
+            std::cout << "Acceleromter: connect error" << std::endl;
+        }
 
+<<<<<<< HEAD
         // if (gyroscope.connect() == 0){
         //     gyroscope.read_xyz();
         //     imu_msg.angular_velocity.x = gyroscope.velocity.x;
@@ -93,6 +86,15 @@ int main(int argc, char *argv[]){
             imu_msg.angular_velocity.z = imu_sensor.angular_velocity.z;
         } else {
             std::cout << "Imu_sensor: connect error" << std::endl;
+=======
+        if (gyroscope.connect() == 0){
+            gyroscope.read_xyz();
+            imu_msg.angular_velocity.x = gyroscope.velocity.x;
+            imu_msg.angular_velocity.y = gyroscope.velocity.y;
+            imu_msg.angular_velocity.z = gyroscope.velocity.z;
+        } else {
+            std::cout << "Gyroscope: connect error" << std::endl;
+>>>>>>> parent of 40ccd85... Test MPU6050 connection
         }
         
         imu_msg.header.stamp = ros::Time::now();
