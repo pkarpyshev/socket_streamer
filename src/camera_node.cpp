@@ -6,11 +6,27 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include <ros/ros.h>
-#include <image_transport/image_transport.h>
 #include <cv_bridge/cv_bridge.h>
+
+#include <iostream>
+#include <string>
 
 const int buf_size = CAM_HEIGHT*CAM_WIDTH;
 static const double ros_freq = 11;
+
+template <typename T>
+T getParam(ros::NodeHandle &nh, std::string name)
+{
+    T res;
+    if (nh.getParam(name, res)) {
+        std::cout << "Loaded: " << name << ": " << res << std::endl;
+    }
+    else {
+        std::cerr << "Failed to load: " << name << std::endl;
+        nh.shutdown();
+    }
+    return res;
+}
 
 int main(int argc, char *argv[]){
     // Open camera stream
@@ -31,9 +47,7 @@ int main(int argc, char *argv[]){
 
     // Define  variables for opencv
     cv::Mat frame_rgb;
-    // cv::Size frame_size(CAM_WIDTH, CAM_HEIGHT);
     cv::Mat frame_gray(cv::Size(CAM_WIDTH, CAM_HEIGHT), CV_8UC1);
-    // cv::Size frame_size(CAM_WIDTH, CAM_HEIGHT);
     cv::Mat frame_msg(cv::Size(MSG_WIDTH, MSG_HEIGHT), CV_8UC1);
     
     // Need to rotate image
@@ -43,6 +57,7 @@ int main(int argc, char *argv[]){
     // Initializw ROS
     ros::init(argc, argv, "camera_node");
     ros::NodeHandle nh;
+    std::string frame_id = getParam<std::string>(nh, "frame_id");
 
     ros::Publisher pub = nh.advertise<sensor_msgs::Image>("cam0/image_raw", 10);
     sensor_msgs::Image msg;
@@ -68,7 +83,7 @@ int main(int argc, char *argv[]){
         // Make message
         cv_image.image = frame_msg;
         cv_image.toImageMsg(msg);
-        msg.header.frame_id = "cam0";
+        msg.header.frame_id = frame_id;
         msg.header.stamp = ros::Time::now();
         
         pub.publish(msg);

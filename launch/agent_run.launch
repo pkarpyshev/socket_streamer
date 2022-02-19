@@ -1,6 +1,10 @@
 <launch>
+    <arg name="agent_name"      default="cam0"/>
+
     <!-- Launch camera node -->
-    <node pkg="socket_streamer" type="camera_node" name="camera_node" output="screen" />
+    <node pkg="socket_streamer" type="camera_node" name="camera_node" output="screen">
+        <param name="frame_id"      value="$(arg agent_name)"/>
+    </node>
     
     <!-- Launch imu node -->
     <node pkg="socket_streamer" type="imu_node" name="imu_node" output="screen" />    
