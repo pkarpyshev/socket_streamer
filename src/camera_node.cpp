@@ -57,9 +57,9 @@ int main(int argc, char *argv[]){
     // Initializw ROS
     ros::init(argc, argv, "camera_node");
     ros::NodeHandle nh;
-    std::string frame_id = getParam<std::string>(nh, "frame_id");
+    std::string frame_id = getParam<std::string>(nh, "/camera_node/frame_id");
 
-    ros::Publisher pub = nh.advertise<sensor_msgs::Image>("cam0/image_raw", 10);
+    ros::Publisher pub = nh.advertise<sensor_msgs::Image>(frame_id+"/image_raw", 10);
     sensor_msgs::Image msg;
     msg.height = MSG_HEIGHT;
     msg.width = MSG_WIDTH;
