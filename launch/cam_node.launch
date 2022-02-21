@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="socket_streamer" type="camera_node" name="camera_node" output="screen" />
+</launch>
